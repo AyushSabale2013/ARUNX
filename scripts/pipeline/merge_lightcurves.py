@@ -12,7 +12,7 @@ from astropy.time import Time
 # CONFIGURATION
 # ==================================================
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[2]
 
 HEL1OS_DIR = BASE / "raw_helios"
 SOLEXS_DIR = BASE / "raw_solexs"
