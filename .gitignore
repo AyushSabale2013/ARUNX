@@ -1,0 +1,28 @@
+# Python environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Downloaded HEL1OS data
+raw_helios/
+pradan1.issdc.gov.in/
+
+# Large scientific data
+*.fits
+*.fit
+*.zip
+*.part
+
+# Generated downloader scripts
+hel1os_*.py
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# System files
+.DS_Store
+raw_solexs/
+raw_solexs/

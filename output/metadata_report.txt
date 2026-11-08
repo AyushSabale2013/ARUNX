@@ -1,0 +1,819 @@
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/cdte/hel1os_cdte_spectra_cdte2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 511J
+  Column: COUNTS          Unit: cts          Format: 511D
+  Column: STAT_ERR        Unit: None         Format: 511D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49960101679
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/cdte/hel1os_cdte_spectra_cdte1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 511J
+  Column: COUNTS          Unit: cts          Format: 511D
+  Column: STAT_ERR        Unit: None         Format: 511D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49960101679
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/cdte/lightcurve_cdte1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CDTE1_LC_BAND_5.00KEV_TO_20.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49970518346
+
+HDU 2: CDTE1_LC_BAND_20.00KEV_TO_30.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49784175753
+
+HDU 3: CDTE1_LC_BAND_30.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00079834598
+  TSTOP: 61349.49936316079
+
+HDU 4: CDTE1_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49935796123
+
+HDU 5: CDTE1_LC_BAND_1.80KEV_TO_90.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/cdte/lightcurve_cdte2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CDTE2_LC_BAND_5.00KEV_TO_20.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 2: CDTE2_LC_BAND_20.00KEV_TO_30.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00079834598
+  TSTOP: 61349.49971038302
+
+HDU 3: CDTE2_LC_BAND_30.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00047451384
+  TSTOP: 61349.49943284717
+
+HDU 4: CDTE2_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 5: CDTE2_LC_BAND_1.80KEV_TO_90.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/czt/hel1os_czt_spectra_czt2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 341J
+  Column: COUNTS          Unit: cts          Format: 341D
+  Column: STAT_ERR        Unit: None         Format: 341D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49960101679
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/czt/lightcurve_czt2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CZT2_LC_BAND_20.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 2: CZT2_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 3: CZT2_LC_BAND_60.00KEV_TO_80.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 4: CZT2_LC_BAND_80.00KEV_TO_150.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 5: CZT2_LC_BAND_18.00KEV_TO_160.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/czt/lightcurve_czt1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CZT1_LC_BAND_20.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 2: CZT1_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 3: CZT1_LC_BAND_60.00KEV_TO_80.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 4: CZT1_LC_BAND_80.00KEV_TO_150.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+HDU 5: CZT1_LC_BAND_18.00KEV_TO_160.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49978620197
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/czt/hel1os_czt_spectra_czt1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 341J
+  Column: COUNTS          Unit: cts          Format: 341D
+  Column: STAT_ERR        Unit: None         Format: 341D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49960101679
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/aux/gticdte2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CDTE2
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/aux/gticzt1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CZT1
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/aux/hk.fits
+
+HDU 0: PRIMARY
+
+HDU 1: HLSHK
+  Column: l0recnum        Unit: None         Format: J
+  Column: l0grtyr         Unit: None         Format: J
+  Column: l0grtmon        Unit: None         Format: J
+  Column: l0grtdy         Unit: None         Format: J
+  Column: l0grthr         Unit: None         Format: J
+  Column: l0grtmin        Unit: None         Format: J
+  Column: l0grtsc         Unit: None         Format: J
+  Column: l0grtmsc        Unit: None         Format: J
+  Column: l0utcyr         Unit: None         Format: J
+  Column: l0utcmon        Unit: None         Format: J
+  Column: l0utcdy         Unit: None         Format: J
+  Column: l0utchr         Unit: None         Format: J
+  Column: l0utcmin        Unit: None         Format: J
+  Column: l0utcsc         Unit: None         Format: J
+  Column: l0utcmsc        Unit: None         Format: J
+  Column: l0framecnt      Unit: None         Format: J
+  Column: l0dhobt         Unit: None         Format: K
+  Column: mjd             Unit: None         Format: D
+  Column: czt1temp        Unit: degC         Format: D
+  Column: czt2temp        Unit: degC         Format: D
+  Column: czt1bunpxst     Unit: None         Format: K
+  Column: czt2bunpxst     Unit: None         Format: K
+  Column: pagestim        Unit: None         Format: D
+  Column: cdte1ctr        Unit: c/s          Format: D
+  Column: pagenum         Unit: None         Format: K
+  Column: czt1ctr         Unit: c/s          Format: D
+  Column: czt1enth        Unit: keV          Format: D
+  Column: czt2ctr         Unit: c/s          Format: D
+  Column: czt2enth        Unit: None         Format: D
+  Column: cdte2ctr        Unit: c/s          Format: D
+  Column: czt1pktm        Unit: None         Format: D
+  Column: czt2pktm        Unit: None         Format: D
+  Column: fehkstat        Unit: None         Format: K
+  Column: czt1hotpix      Unit: None         Format: K
+  Column: czt1hotpixcnt   Unit: None         Format: K
+  Column: czt1hotpixlgcstat Unit: None         Format: K
+  Column: czt1hotpixthr   Unit: None         Format: K
+  Column: czt2hotpix      Unit: None         Format: K
+  Column: czt2hotpixcnt   Unit: None         Format: K
+  Column: czt2hotpixlgcstat Unit: None         Format: K
+  Column: czt2hotpixthr   Unit: None         Format: K
+  Column: cdte1enerthr    Unit: None         Format: D
+  Column: cdte2enerthr    Unit: None         Format: D
+  Column: czthvmon        Unit: V            Format: D
+  Column: cdtehvmon       Unit: V            Format: D
+  Column: cdte1temp       Unit: degC         Format: D
+  Column: cdte2temp       Unit: degC         Format: D
+  Column: cdte1pilectr    Unit: None         Format: K
+  Column: cdte2pilectr    Unit: None         Format: K
+  Column: czt1satctr1     Unit: None         Format: K
+  Column: czt2satctr1     Unit: None         Format: K
+  Column: czt1bunpxctr    Unit: None         Format: K
+  Column: czt2bunpxctr    Unit: None         Format: K
+  Column: sunradeg        Unit: None         Format: D
+  Column: sundecdeg       Unit: None         Format: D
+  Column: suninfov        Unit: None         Format: B
+  Column: sun2yawdeg      Unit: None         Format: D
+  Column: sun2rolldeg     Unit: None         Format: D
+  Column: sun2pitchdeg    Unit: None         Format: D
+  Column: yawradeg        Unit: None         Format: D
+  Column: yawdecdeg       Unit: None         Format: D
+  Column: lastevtmjd      Unit: None         Format: D
+  TSTART: 61349.00006397975
+  TSTOP: 61349.49989561991
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/aux/gticzt2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CZT2
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/aux/gticdte1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CDTE1
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/events/evt.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CDTE1-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: chn             Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.00006397975
+  TSTOP: 61349.4997925752
+
+HDU 2: CDTE2-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: chn             Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.00006397975
+  TSTOP: 61349.4997925752
+
+HDU 3: CZT1-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: pix             Unit: None         Format: B
+  Column: chn             Unit: None         Format: I
+  Column: offsetchn       Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.00006397975
+  TSTOP: 61349.4997925752
+
+HDU 4: CZT2-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: pix             Unit: None         Format: B
+  Column: chn             Unit: None         Format: I
+  Column: offsetchn       Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.00006397975
+  TSTOP: 61349.4997925752
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/cdte/hel1os_cdte_spectra_cdte2.fits
+ERROR: No SIMPLE card found, this file does not appear to be a valid FITS file. If this is really a FITS file, try with ignore_missing_simple=True
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/cdte/hel1os_cdte_spectra_cdte1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 511J
+  Column: COUNTS          Unit: cts          Format: 511D
+  Column: STAT_ERR        Unit: None         Format: 511D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99958744118
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/cdte/lightcurve_cdte1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CDTE1_LC_BAND_5.00KEV_TO_20.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.5000693537
+  TSTOP: 61349.99956009444
+
+HDU 2: CDTE1_LC_BAND_20.00KEV_TO_30.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50042799846
+  TSTOP: 61349.99811318365
+
+HDU 3: CDTE1_LC_BAND_30.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.5000693537
+  TSTOP: 61349.99937490925
+
+HDU 4: CDTE1_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 5: CDTE1_LC_BAND_1.80KEV_TO_90.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/cdte/lightcurve_cdte2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CDTE2_LC_BAND_5.00KEV_TO_20.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99972633007
+
+HDU 2: CDTE2_LC_BAND_20.00KEV_TO_30.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.5009257262
+  TSTOP: 61349.9987382262
+
+HDU 3: CDTE2_LC_BAND_30.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99902031155
+
+HDU 4: CDTE2_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 5: CDTE2_LC_BAND_1.80KEV_TO_90.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/czt/hel1os_czt_spectra_czt2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 341J
+  Column: COUNTS          Unit: cts          Format: 341D
+  Column: STAT_ERR        Unit: None         Format: 341D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99958744118
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/czt/lightcurve_czt2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CZT2_LC_BAND_20.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 2: CZT2_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 3: CZT2_LC_BAND_60.00KEV_TO_80.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 4: CZT2_LC_BAND_80.00KEV_TO_150.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 5: CZT2_LC_BAND_18.00KEV_TO_160.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/czt/lightcurve_czt1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CZT1_LC_BAND_20.00KEV_TO_40.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 2: CZT1_LC_BAND_40.00KEV_TO_60.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 3: CZT1_LC_BAND_60.00KEV_TO_80.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 4: CZT1_LC_BAND_80.00KEV_TO_150.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+HDU 5: CZT1_LC_BAND_18.00KEV_TO_160.00KEV
+  Column: MJD             Unit: MJD          Format: D
+  Column: ISOT            Unit: UT           Format: 30A
+  Column: CTR             Unit: cts/sec      Format: D
+  Column: STAT_ERR        Unit: cts/sec      Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99980734859
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/czt/hel1os_czt_spectra_czt1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: SPECTRUM
+  Column: SPEC_NUM        Unit: None         Format: I
+  Column: CHANNEL         Unit: None         Format: 341J
+  Column: COUNTS          Unit: cts          Format: 341D
+  Column: STAT_ERR        Unit: None         Format: 341D
+  Column: ROWID           Unit: None         Format: 12A
+  Column: TSTART          Unit: s            Format: D
+  Column: TSTOP           Unit: s            Format: D
+  Column: EXPOSURE        Unit: s            Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99958744118
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/aux/gticdte2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CDTE2
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/aux/gticzt1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CZT1
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/aux/hk.fits
+
+HDU 0: PRIMARY
+
+HDU 1: HLSHK
+  Column: l0recnum        Unit: None         Format: J
+  Column: l0grtyr         Unit: None         Format: J
+  Column: l0grtmon        Unit: None         Format: J
+  Column: l0grtdy         Unit: None         Format: J
+  Column: l0grthr         Unit: None         Format: J
+  Column: l0grtmin        Unit: None         Format: J
+  Column: l0grtsc         Unit: None         Format: J
+  Column: l0grtmsc        Unit: None         Format: J
+  Column: l0utcyr         Unit: None         Format: J
+  Column: l0utcmon        Unit: None         Format: J
+  Column: l0utcdy         Unit: None         Format: J
+  Column: l0utchr         Unit: None         Format: J
+  Column: l0utcmin        Unit: None         Format: J
+  Column: l0utcsc         Unit: None         Format: J
+  Column: l0utcmsc        Unit: None         Format: J
+  Column: l0framecnt      Unit: None         Format: J
+  Column: l0dhobt         Unit: None         Format: K
+  Column: mjd             Unit: None         Format: D
+  Column: czt1temp        Unit: degC         Format: D
+  Column: czt2temp        Unit: degC         Format: D
+  Column: czt1bunpxst     Unit: None         Format: K
+  Column: czt2bunpxst     Unit: None         Format: K
+  Column: pagestim        Unit: None         Format: D
+  Column: cdte1ctr        Unit: c/s          Format: D
+  Column: pagenum         Unit: None         Format: K
+  Column: czt1ctr         Unit: c/s          Format: D
+  Column: czt1enth        Unit: keV          Format: D
+  Column: czt2ctr         Unit: c/s          Format: D
+  Column: czt2enth        Unit: None         Format: D
+  Column: cdte2ctr        Unit: c/s          Format: D
+  Column: czt1pktm        Unit: None         Format: D
+  Column: czt2pktm        Unit: None         Format: D
+  Column: fehkstat        Unit: None         Format: K
+  Column: czt1hotpix      Unit: None         Format: K
+  Column: czt1hotpixcnt   Unit: None         Format: K
+  Column: czt1hotpixlgcstat Unit: None         Format: K
+  Column: czt1hotpixthr   Unit: None         Format: K
+  Column: czt2hotpix      Unit: None         Format: K
+  Column: czt2hotpixcnt   Unit: None         Format: K
+  Column: czt2hotpixlgcstat Unit: None         Format: K
+  Column: czt2hotpixthr   Unit: None         Format: K
+  Column: cdte1enerthr    Unit: None         Format: D
+  Column: cdte2enerthr    Unit: None         Format: D
+  Column: czthvmon        Unit: V            Format: D
+  Column: cdtehvmon       Unit: V            Format: D
+  Column: cdte1temp       Unit: degC         Format: D
+  Column: cdte2temp       Unit: degC         Format: D
+  Column: cdte1pilectr    Unit: None         Format: K
+  Column: cdte2pilectr    Unit: None         Format: K
+  Column: czt1satctr1     Unit: None         Format: K
+  Column: czt2satctr1     Unit: None         Format: K
+  Column: czt1bunpxctr    Unit: None         Format: K
+  Column: czt2bunpxctr    Unit: None         Format: K
+  Column: sunradeg        Unit: None         Format: D
+  Column: sundecdeg       Unit: None         Format: D
+  Column: suninfov        Unit: None         Format: B
+  Column: sun2yawdeg      Unit: None         Format: D
+  Column: sun2rolldeg     Unit: None         Format: D
+  Column: sun2pitchdeg    Unit: None         Format: D
+  Column: yawradeg        Unit: None         Format: D
+  Column: yawdecdeg       Unit: None         Format: D
+  Column: lastevtmjd      Unit: None         Format: D
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99991705564
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/aux/gticzt2.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CZT2
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/aux/gticdte1.fits
+
+HDU 0: PRIMARY
+
+HDU 1: GTI_CDTE1
+  Column: tstart          Unit: None         Format: D
+  Column: tstop           Unit: None         Format: D
+
+================================================================================
+FILE: raw_helios/2026/11/05/HLS_20261105_120004_43188sec_lev1_V111/events/evt.fits
+
+HDU 0: PRIMARY
+
+HDU 1: CDTE1-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: chn             Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99981805201
+
+HDU 2: CDTE2-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: chn             Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99981805201
+
+HDU 3: CZT1-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: pix             Unit: None         Format: B
+  Column: chn             Unit: None         Format: I
+  Column: offsetchn       Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99981805201
+
+HDU 4: CZT2-EVENTS
+  Column: mjd             Unit: None         Format: D
+  Column: hlsobt          Unit: s            Format: D
+  Column: currtemp        Unit: degC         Format: D
+  Column: pix             Unit: None         Format: B
+  Column: chn             Unit: None         Format: I
+  Column: offsetchn       Unit: None         Format: I
+  Column: ener            Unit: keV          Format: D
+  Column: recnum          Unit: None         Format: J
+  Column: utc-isot        Unit: None         Format: 23A
+  TSTART: 61349.50005040415
+  TSTOP: 61349.99981805201
+
+================================================================================
+FILE: raw_solexs/AL1_SLX_L1_20261105_v1.0/SDD2/AL1_SOLEXS_20261105_SDD2_L1.lc.gz
+
+HDU 0: PRIMARY
+
+HDU 1: RATE
+  Column: TIME            Unit: None         Format: D
+  Column: COUNTS          Unit: None         Format: D
+  TIMESYS: UTC
+  TIMEUNIT: s
+  MJDREFI: 40587
+  MJDREFF: 0
+  TSTART: 1793836800.0
+  TSTOP: 1793923199.0
+  TIMEDEL: 1
