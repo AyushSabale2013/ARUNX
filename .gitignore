@@ -1,105 +1,60 @@
 
-# ==============================
+# ============================================================
+# ARUN-X | Git Ignore
+# ============================================================
+
+# ----------------------------
 # Python
-# ==============================
+# ----------------------------
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 *.pyd
 *.so
+*.egg
 *.egg-info/
 .eggs/
+wheels/
+pip-wheel-metadata/
 build/
 dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
 
-# Virtual environments
+# ----------------------------
+# Virtual Environments
+# ----------------------------
 venv/
 .venv/
 env/
 ENV/
+.python-version
 
-# ==============================
-# Environment variables / Secrets
-# ==============================
+# ----------------------------
+# Environment Variables & Secrets
+# ----------------------------
 .env
 .env.*
 !.env.example
+!.env.template
+
 *.pem
 *.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
 secrets/
 credentials/
 
-# ==============================
-# Jupyter
-# ==============================
-.ipynb_checkpoints/
-
-# ==============================
-# ML / Deep Learning
-# ==============================
-*.pt
-*.pth
-*.ckpt
-*.onnx
-*.pkl
-*.pickle
-*.joblib
-*.h5
-*.keras
-*.model
-
-# Model outputs
-models/
-checkpoints/
-output/model_results/
-output/ml_ready*/
-output/merged/checkpoints*/
-
-# ==============================
-# Large datasets
-# ==============================
-data/
-datasets/
-*.fits
-*.fits.gz
-*.fit
-*.fit.gz
-*.parquet
-*.csv.gz
-*.zip
-*.tar
-*.tar.gz
-
-# ==============================
-# Logs
-# ==============================
-*.log
-logs/
-*.out
-
-# ==============================
-# IDE / OS
-# ==============================
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ==============================
-# Node.js (if frontend exists)
-# ==============================
-node_modules/
-npm-debug.log*
-dist/
-# ==============================
-# PRADAN PORTAL CREDENTIALS
-# ==============================
-.env
-.env.*
-!.env.example
-
-# Credential files
+# Credential and authentication files
 *credentials*
 *credential*
 *secrets*
@@ -108,8 +63,10 @@ dist/
 *passwd*
 *auth*
 *token*
+*cookie*
+*cookies*
 
-# Portal-specific configuration
+# PRADAN portal credentials / sessions
 pradan_credentials.json
 pradan_config.json
 pradan_auth.json
@@ -118,3 +75,160 @@ portal_credentials.json
 portal_config.json
 cookies.txt
 cookies.json
+session.json
+session.dat
+*.session
+
+# ----------------------------
+# Jupyter Notebooks
+# ----------------------------
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ----------------------------
+# Machine Learning / Deep Learning
+# ----------------------------
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.keras
+*.model
+*.safetensors
+*.tflite
+*.pb
+
+# Model directories and checkpoints
+models/
+checkpoints/
+saved_models/
+weights/
+
+# ----------------------------
+# ML Outputs / Experiments
+# ----------------------------
+output/model_results/
+output/ml_ready*/
+output/merged/checkpoints*/
+output/experiments/
+output/predictions/
+output/evaluation/
+runs/
+wandb/
+mlruns/
+tensorboard/
+lightning_logs/
+
+# ----------------------------
+# Large Datasets / Scientific Data
+# ----------------------------
+data/
+datasets/
+
+# Scientific / satellite data
+*.fits
+*.fit
+*.fts
+
+# Large tabular / binary data
+*.parquet
+*.feather
+*.arrow
+*.npy
+*.npz
+*.bin
+*.dat
+*.raw
+
+# Scientific lightcurve data
+*.lc
+*.gti
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+*.gz
+
+# Raw Aditya-L1 datasets
+raw_solexs/
+raw_helios/
+
+# Generated datasets
+output/*.parquet
+
+# ----------------------------
+# Logs / Temporary Files
+# ----------------------------
+*.log
+*.out
+*.err
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# ----------------------------
+# IDE / Editors
+# ----------------------------
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+
+# ----------------------------
+# Operating System
+# ----------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+
+# ----------------------------
+# Node.js (if frontend exists)
+# ----------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.next/
+.nuxt/
+.parcel-cache/
+dist/
+coverage/
+
+# ----------------------------
+# Build / Deployment
+# ----------------------------
+site/
+public/build/
+.cache/
+
+# ----------------------------
+# Local Configuration
+# ----------------------------
+*.local
+config.local.*
+settings.local.*
+
+# ----------------------------
+# Keep useful project templates
+# ----------------------------
+!.env.example
+!.env.template
