@@ -1,0 +1,19 @@
+# Core data processing
+numpy
+pandas
+scipy
+pyarrow
+
+# Machine learning
+scikit-learn
+joblib
+
+# Gradient boosting
+xgboost
+lightgbm
+
+# Deep learning
+torch
+
+# Visualization
+matplotlib
