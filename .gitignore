@@ -1,28 +1,120 @@
-# Python environment
+
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
 venv/
 .venv/
-__pycache__/
-*.pyc
+env/
+ENV/
 
-# Downloaded HEL1OS data
-raw_helios/
-pradan1.issdc.gov.in/
+# ==============================
+# Environment variables / Secrets
+# ==============================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
 
-# Large scientific data
+# ==============================
+# Jupyter
+# ==============================
+.ipynb_checkpoints/
+
+# ==============================
+# ML / Deep Learning
+# ==============================
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.keras
+*.model
+
+# Model outputs
+models/
+checkpoints/
+output/model_results/
+output/ml_ready*/
+output/merged/checkpoints*/
+
+# ==============================
+# Large datasets
+# ==============================
+data/
+datasets/
 *.fits
+*.fits.gz
 *.fit
+*.fit.gz
+*.parquet
+*.csv.gz
 *.zip
-*.part
+*.tar
+*.tar.gz
 
-# Generated downloader scripts
-hel1os_*.py
+# ==============================
+# Logs
+# ==============================
+*.log
+logs/
+*.out
 
-# Secrets
+# ==============================
+# IDE / OS
+# ==============================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Node.js (if frontend exists)
+# ==============================
+node_modules/
+npm-debug.log*
+dist/
+# ==============================
+# PRADAN PORTAL CREDENTIALS
+# ==============================
 .env
 .env.*
 !.env.example
 
-# System files
-.DS_Store
-raw_solexs/
-raw_solexs/
+# Credential files
+*credentials*
+*credential*
+*secrets*
+*secret*
+*password*
+*passwd*
+*auth*
+*token*
+
+# Portal-specific configuration
+pradan_credentials.json
+pradan_config.json
+pradan_auth.json
+pradan_session.json
+portal_credentials.json
+portal_config.json
+cookies.txt
+cookies.json

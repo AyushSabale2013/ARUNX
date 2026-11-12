@@ -1,0 +1,2 @@
+line,original,date,start_original,peak_original,end_original,class,reason
+1642,3-Jul-2026 23:50   12:03   00:05   M2.0      14480,3-Jul-2026,23:50,12:03,00:05,M2.0,"Invalid chronology: start=2026-07-03 23:50:00+00:00, peak=2026-07-04 12:03:00+00:00, end=2026-07-04 00:05:00+00:00"

@@ -1,0 +1,10 @@
+,value
+rows,298080
+columns,111
+observation_dates,207
+duplicate_timestamps,0
+dates_not_1440_rows,0
+within_day_timestamp_gaps,0
+channels_with_missing_flag_mismatch,0
+channels_with_gti_missing_conflicts,0
+channels_with_values_outside_gti,0
