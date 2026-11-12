@@ -1,1098 +1,390 @@
-# ARUN-X --- End-to-End Data, Training, and Evaluation Procedure
+# ARUN-X Explained Simply
 
-**Project:** ARUN-X --- Automated Radiation Understanding Network for
-X-ray Analysis\
-**Purpose:** Solar-flare nowcasting and forecasting using Aditya-L1
-X-ray observations, with GOES flare events used as labels/reference
-events.\
-**Document status:** Working technical procedure and experiment record\
-**Last updated:** 12 November 2026
+### Forecasting solar flares from X-ray observations of the Aditya-L1 satellite
 
-> **Important record-keeping note:** This document separates confirmed
-> work and recorded settings from details that are not available in the
-> conversation history. It does not invent shell commands, download
-> parameters, preprocessing values, model hyperparameters, or results.
-> Where an exact command or configuration was not preserved, that is
-> stated explicitly. Keep this document updated when the original
-> scripts/configuration are inspected.
+**ARUN-X** stands for *Automated Radiation Understanding Network for X-ray Analysis*.
 
-------------------------------------------------------------------------
+> **In one sentence:** We teach computers to read the X-rays coming from the Sun and to warn us **15, 30 or 60 minutes before** a solar flare starts.
 
-## 1. Project objective
+| | |
+|---|---|
+| **Project record dated** | 12 November 2026 |
+| **Satellite** | Aditya-L1 (ISRO) |
+| **Instruments used** | SoLEXS (soft X-rays) and HEL1OS (hard X-rays) |
+| **Answer key** | GOES flare catalogue (M and X class flares) |
+| **Models compared** | 9 model types x 3 forecast horizons = 27 runs |
 
-The project aims to build machine-learning models that use solar X-ray
-time-series data from Aditya-L1 to identify and forecast solar flares.
+---
 
-### 1.1 Input instruments
+## Contents
 
--   **SoLEXS (Solar Low Energy X-ray Spectrometer):** soft X-ray
-    observations. The project description has used the approximate
-    energy range **1--30 keV**.
--   **HEL1OS (High Energy L1 Orbiting X-ray Spectrometer):** hard X-ray
-    observations. The project description has used the approximate
-    energy range **8--150 keV**; individual inspected FITS products
-    expose specific energy bands.
+1. [The Big Idea](#1-the-big-idea)
+2. [Where the Data Comes From](#2-where-the-data-comes-from)
+3. [Getting the Data Ready](#3-getting-the-data-ready)
+4. [What We Are Predicting](#4-what-we-are-predicting)
+5. [The Rare-Event Problem](#5-the-rare-event-problem)
+6. [How the Data Was Split](#6-how-the-data-was-split)
+7. [The Nine Models](#7-the-nine-models)
+8. [How Success Was Measured](#8-how-success-was-measured)
+9. [Results](#9-results)
+10. [Limitations](#10-limitations)
+11. [Project Status and Next Steps](#11-project-status-and-next-steps)
+12. [Mini Dictionary](#12-mini-dictionary)
 
-The intended approach is to align the two instruments' time series and
-use their combined information.
+---
 
-### 1.2 Reference event catalogue
+## 1. The Big Idea
 
-The project uses GOES flare-event information as the
-reference/ground-truth event catalogue. The event-level evaluation
-described below specifically reports GOES **M- and X-class** events.
+A **solar flare** is a sudden burst of energy on the Sun. It shows up as a quick jump in X-ray light. Large flares can disturb satellites and communication systems, so an early warning is valuable.
 
-GOES event labels are not a replacement for the Aditya-L1 input
-measurements. The model input data are the Aditya-L1 instrument
-observations; GOES is used for event timing/labels and evaluation.
+Our approach has three simple steps:
 
-### 1.3 Prediction horizons
+| Step | What happens |
+|---|---|
+| **1. Observe** | Collect X-ray measurements from two instruments on Aditya-L1 |
+| **2. Learn** | Train machine-learning models to recognise the pattern that appears just before a flare |
+| **3. Warn** | Each minute, estimate whether a flare will start within the next 15, 30 or 60 minutes |
 
-The current experiments cover three forecast horizons:
+### The complete workflow
 
--   **15 minutes**
--   **30 minutes**
--   **60 minutes**
+![ARUN-X workflow](figures/fig1_pipeline.png)
 
-The prediction target is a binary target for each horizon. The recorded
-convention is minute-end indexing: a timestamp such as `00:01`
-represents the interval `[00:00, 00:01)`. For a timestamp `t` and
-horizon `H`, the target is positive when a qualifying flare onset occurs
-in the next `H` minutes.
+*Figure 1. Every stage writes its results to files, so each step can be checked later.*
 
-------------------------------------------------------------------------
+---
 
-## 2. Data acquisition
+## 2. Where the Data Comes From
 
-### 2.1 Data portal and source
+### The two instruments
 
-Aditya-L1 data were downloaded through the **PRADAN portal**. The
-project used bulk downloads of SoLEXS and HEL1OS data.
+| Instrument | What it measures | Approximate energy range | Role in the story |
+|---|---|---|---|
+| **SoLEXS** | Soft X-rays | 1 to 30 keV | The thermal, "heating up" part of a flare |
+| **HEL1OS** | Hard X-rays | 8 to 150 keV | The sudden, high-energy part of a flare |
 
-The download process involved portal session/cookie considerations.
-Resume behaviour and session validity were discussed because the files
-were large. Do not assume that every interrupted download resumed
-successfully unless the downloaded archive was checked.
+Soft and hard X-rays describe **different parts of the same event**. Using both gives the models a fuller picture than either alone.
 
-### 2.2 Initial test-day download and FITS inspection
+### The answer key: GOES
 
-A concrete inspection run was performed for **5 November 2026**. The
-user reported that 4 November data were unavailable for the required
-download, so 5 November data were used for both HEL1OS and SoLEXS in
-that test.
+GOES is a separate satellite system that keeps an official list of flares. In this project it is used **only** to know when real flares happened and how strong they were.
 
-The working test folder was created as:
+> **Important:** GOES is never given to the models as input. Only Aditya-L1 data goes in. GOES is used for labels and for checking the results.
 
-``` text
-aditya_test/
-├── raw_solexs/
-├── raw_helios/
-├── goes/
-└── output/
-```
+The evaluation focuses on the two strongest flare classes, **M-class** and **X-class**. In the evaluation catalogue there are **231** such events, and **56** of them fall in July 2026.
 
-The folder was initially named `pradhan_test` and later renamed to
-`aditya_test`.
+### How the files look
 
-The downloaded archives were extracted into the corresponding raw-data
-folders. The FITS inspection script was named:
+- Data was downloaded in bulk from the **PRADAN portal**, ISRO's data portal.
+- The files are in **FITS** format, the standard file type in astronomy.
+- A FITS file has several sections called **HDUs**, and each section can hold a different energy band.
 
-``` text
-inspect_lightcurves.py
-```
+**Worked example (5 November 2026):** data for 4 November was not available, so 5 November was inspected instead. One HEL1OS file had **43,169 rows** covering 00:00:06 to 11:59:34 UTC. Each row has a time (`MJD`, `ISOT`), a count rate (`CTR`) and its uncertainty (`STAT_ERR`).
 
-It used:
+---
 
--   `astropy.io.fits`
--   `astropy.time.Time`
--   `astropy.units`
+## 3. Getting the Data Ready
 
-An initial `ModuleNotFoundError` for `matplotlib` and the
-externally-managed Python environment restriction led to creating a
-virtual environment and installing the required packages there. The FITS
-inspection script subsequently ran successfully.
+Raw satellite files cannot go straight into a model. They are converted into one clean table with:
 
-### 2.3 HEL1OS FITS inspection details recorded
+- **one row per minute,**
+- **424 features** (the clues the model learns from), and
+- **a target column** that says whether a flare began soon after.
 
-One inspected file was:
+The finished dataset is about **2.6 GB**.
 
-``` text
-raw_helios/2026/11/05/HLS_20261105_000005_43185sec_lev1_V111/cdte/lightcurve_cdte1.fits
-```
+### The 424 clues, in seven groups
 
-A corresponding `lightcurve_cdte2.fits` file was also inspected.
+| Group | In plain words |
+|---|---|
+| Signal logarithms | Compresses very large numbers so small and large changes can be compared |
+| Missing-value flags | Marks the minutes where data was missing |
+| GTI information | Shows when the instrument data is valid, so a gap is not mistaken for a quiet Sun |
+| HEL1OS error features | How uncertain each hard X-ray measurement is |
+| Rolling statistics | Averages and trends over the last 5, 15, 30 and 60 minutes |
+| Lag and difference | How much the signal changed 1, 5 and 15 minutes earlier |
+| Time of day | The hour of the day, written as sine and cosine |
 
-The FITS files contain multiple HDUs. The inspected light-curve HDUs
-included energy bands such as:
+### Safety rules against "cheating"
 
--   5--20 keV
--   20--30 keV
--   30--40 keV
--   40--60 keV
--   1.80--90.00 keV
+Machine-learning results can look better than they really are if the model accidentally sees the future. This is called **data leakage**. The project avoids it with these rules:
 
-The inspected table columns included:
+| Rule | Why it matters |
+|---|---|
+| Rolling and lag clues restart after a data gap | A gap is never treated as real data |
+| They need consecutive one-minute samples | Keeps the clues honest |
+| Clues use only the past, the target uses only the future | No peeking at the answer |
+| Data is split by time, never mixed randomly | Mimics real forecasting |
 
--   `MJD`
--   `ISOT`
--   `CTR`
--   `STAT_ERR`
+---
 
-The recorded interpretation was:
+## 4. What We Are Predicting
 
--   `MJD` / `ISOT`: time information
--   `CTR`: measured count-rate signal
--   `STAT_ERR`: statistical error associated with the signal
-
-For the inspected HEL1OS CDTE1 5--20 keV HDU:
-
--   Rows: **43,169**
--   First UTC time: **2026-11-05 00:00:06.027850**
--   Last UTC time: **2026-11-05 11:59:34.027850**
-
-Other inspected bands had approximately 43,000 rows each. Exact counts
-differ by HDU and detector.
+For every minute `t` and each horizon `H` (15, 30 or 60 minutes), the question is:
 
-**Interpretation:** An HDU is a Header/Data Unit inside a FITS file. HDU
-0 is commonly the primary header/data unit; subsequent HDUs can contain
-separate tables or data products. The inspected files use multiple HDUs
-for different light-curve products/energy bands.
+> **Will a qualifying flare start within the next H minutes?**
+> The answer is **1 (yes)** or **0 (no)**.
 
-### 2.4 Bulk dataset used for model development
+This gives **three separate prediction tasks**, one for each horizon.
 
-The later ML-ready dataset used for model experiments is located at:
+---
 
-``` text
-output/ml_ready_minute_end_v2/
-```
+## 5. The Rare-Event Problem
 
-Its reported size was approximately **2.6 GB**.
+Flares are rare. Most minutes have no flare coming.
 
-The exact list of downloaded archive filenames, full date coverage,
-portal query parameters, checksums, and extraction commands were not
-preserved in the available project record. Recover these from the
-download folder, shell history, PRADAN download records, or data
-manifest before publishing a fully reproducible data-acquisition
-appendix.
+![Class imbalance](figures/fig3_class_imbalance.png)
 
-### 2.5 Data integrity checks to retain
+*Figure 2. Left: in the 15-minute training data only 0.656% of rows are flare rows. Right: the share of flare rows grows with the horizon and is higher in July than in June.*
 
-For every bulk download, retain:
+**15-minute training data**
 
-1.  Original archive filename and source portal.
-2.  Instrument (SoLEXS or HEL1OS).
-3.  Observation date/time coverage.
-4.  Download timestamp and archive size.
-5.  Checksum (for example, SHA-256).
-6.  Extraction destination.
-7.  FITS filename and HDU inventory.
-8.  Any missing dates or failed downloads.
+| | Count |
+|---|---|
+| Total rows | 198,111 |
+| Flare-coming rows (positive) | 1,299 |
+| No-flare rows (negative) | 196,812 |
+| Positive share | about 0.656% |
 
-Do not silently substitute dates or assume complete temporal coverage.
-The 5 November 2026 test-day substitution is a documented example of a
-date not being available.
+**Why this matters:** a lazy model that always answers "no flare" would be right about 99% of the time and yet be completely useless. For that reason the project uses metrics designed for rare events, and gives flare examples extra weight during training (about **184 times** the weight of a normal example for the 15-minute deep-learning task).
 
-------------------------------------------------------------------------
+---
 
-## 3. Project directory and important artifacts
+## 6. How the Data Was Split
 
-The active project root is:
+The data is split **by time**, like studying from old exam papers and then sitting a new one.
 
-``` text
-/home/ayush-sabale/Desktop/BTP/ARUNX
-```
+![Chronological split](figures/fig2_split_timeline.png)
 
-The active Python virtual environment is:
-
-``` text
-/home/ayush-sabale/Desktop/BTP/ARUNX/venv
-```
-
-The correct Python interpreter used for the project is:
-
-``` text
-/home/ayush-sabale/Desktop/BTP/ARUNX/venv/bin/python
-```
+*Figure 3. Training uses January to May, validation uses June, and testing uses July 2026.*
 
-Important paths recorded in the project:
+| Part | Dates (2026) | Purpose |
+|---|---|---|
+| **Training** | 1 January to 31 May | The model learns here |
+| **Validation** | 1 June to 30 June | Choose settings, decide when to stop training, pick the alert threshold |
+| **Test** | July | Final check |
 
-``` text
-ARUNX/
-├── venv/
-├── scripts/
-│   └── ml/
-│       ├── evaluate_event_level.py
-│       └── build_master_model_evaluation.py
-└── output/
-    ├── ml_ready_minute_end_v2/
-    ├── goes_events_parsed.csv
-    └── model_results/
-        ├── baselines/
-        │   ├── all_validation_metrics.csv
-        │   ├── all_test_metrics.csv
-        │   └── individual model prediction CSVs
-        ├── forecasting/
-        │   ├── all_validation_metrics.csv
-        │   ├── all_test_metrics.csv
-        │   └── xgboost prediction CSVs
-        ├── deep_learning/
-        │   ├── cnn/
-        │   ├── cnn_avgmax/
-        │   └── cnn_lstm/
-        ├── comparisons/
-        │   ├── all_models_validation_metrics.csv
-        │   └── all_models_test_metrics.csv
-        ├── event_level/
-        │   └── event_level_summary.csv
-        └── ARUNX_MASTER_MODEL_EVALUATION.csv
-```
+> **Honest note:** July had already been used in earlier experiments. It is therefore an **exploratory benchmark** and not a perfectly fresh, untouched test set.
 
-This is a logical inventory of known paths, not a complete listing of
-every project file.
+---
 
-------------------------------------------------------------------------
+## 7. The Nine Models
 
-## 4. Data preparation and feature construction
+Each model was trained for all three horizons, giving **9 x 3 = 27 runs**.
 
-### 4.1 ML-ready minute-end dataset
+| Type | Models | Idea |
+|---|---|---|
+| **Classical (5)** | Logistic Regression, Random Forest, Extra Trees, Hist Gradient Boosting, LightGBM | Well-known, fast methods that work on the table of clues |
+| **Boosting (1)** | XGBoost | Builds many small decision trees, each fixing the previous one's mistakes |
+| **Deep learning (3)** | CNN, CNN AvgMax, CNN-LSTM | Neural networks that read the last 60 minutes as a sequence |
 
-The model training input is the prepared dataset:
+**About the deep models**
 
-``` text
-output/ml_ready_minute_end_v2/
-```
+| Model | Trainable parameters | What makes it different |
+|---|---|---|
+| CNN | 315,009 | Finds local patterns across the 60-minute window |
+| CNN AvgMax | 317,057 | A CNN variant that uses average and maximum pooling |
+| CNN-LSTM | 331,905 | A CNN followed by an LSTM that remembers how the signal evolved |
 
-The dataset has:
+All three read **60 consecutive minutes** with **424 features per minute** and were trained on a GPU (NVIDIA RTX 3050 Laptop, 6 GB).
 
--   A timestamp field.
--   A binary target field.
--   **424 features**.
--   A reported total size of approximately **2.6 GB**.
+---
 
-The precise filenames/partitioning inside this directory were not
-recorded in the available notes.
+## 8. How Success Was Measured
 
-### 4.2 Time alignment and sampling
+### Minute-by-minute checks (sample level)
 
-The project uses a minute-level time convention. The two instrument
-streams need a common time axis for fusion. The recorded
-feature-generation rules require time continuity: rolling and lag
-features reset across gaps or unusable segments and require consecutive
-one-minute samples.
+| Measure | Question it answers |
+|---|---|
+| **Precision** | When the model warns, how often is it right? |
+| **Recall** | Of all real flare minutes, how many did it catch? |
+| **F1** | A single balance of precision and recall |
+| **PR-AUC** (main score) | How good is the model overall on rare events? Higher is better |
+| **False alarms per day** | How often does it warn when nothing happens? |
 
-The exact resampling method, aggregation rule, tolerance for matching
-timestamps, and handling of duplicate timestamps must be documented from
-the actual preprocessing script before claiming a specific
-implementation.
+> Accuracy alone is misleading here because "no flare" dominates the data.
 
-### 4.3 Recorded feature groups
+### Whole-flare checks (event level)
 
-The 424-feature input includes the following documented feature
-families:
+Event-level checking asks a more practical question: **did the model raise an alert before a real GOES M/X flare?** It reports events detected and missed, the **lead time** (how many minutes early the alert came) and the false-alarm episodes per day.
 
-1.  Signal logarithms.
-2.  Missing-value indicators.
-3.  Good Time Interval (GTI) information.
-4.  HEL1OS error-related features.
-5.  Rolling-window statistics using windows of:
-    -   5 minutes
-    -   15 minutes
-    -   30 minutes
-    -   60 minutes
-6.  Lag/difference features using lags of:
-    -   1 minute
-    -   5 minutes
-    -   15 minutes
-7.  Time-of-day cyclic features using sine and cosine.
+---
 
-The recorded design also discussed a **Hard-to-Soft Ratio (HSR)** as a
-useful fusion feature. Confirm from the final feature-name list whether
-it is present in the 424 features before stating that it was included in
-the final training matrix.
+## 9. Results
 
-### 4.4 Continuity and leakage safeguards
+### 9.1 Best model for each task
 
-The documented feature-generation rules state:
+| Horizon | Best model | Test PR-AUC |
+|---|---|---|
+| **15 minutes** | Random Forest | **0.0759** |
+| **30 minutes** | Logistic Regression | **0.1230** |
+| **60 minutes** | Random Forest | **0.2503** |
 
--   Rolling and lag features reset across data gaps or unusable
-    segments.
--   Rolling/lag features require consecutive one-minute samples.
--   The target at minute-end time `t` refers to flare onset in the
-    future horizon, not the past.
--   Training/validation/test splits are chronological, not random.
+### 9.2 All nine models side by side
 
-These rules are important for avoiding accidental use of future
-observations in predictors. The exact source code should be retained as
-the authoritative implementation.
+![PR-AUC comparison](figures/fig4_pr_auc_comparison.png)
 
-### 4.5 Preprocessing details that need to be recovered from code
+*Figure 4. Test PR-AUC on July 2026. The dashed red line marks what random guessing would score, which equals the share of flare rows in the test month.*
 
-The following values were not preserved in the available record and must
-not be guessed:
+<details>
+<summary>Show the same numbers as a table</summary>
 
--   Exact missing-value imputation method and fill values.
--   Exact outlier/spike handling rules.
--   Exact logarithm formula and offset, if any.
--   Exact scaler type and fitted parameters.
--   Whether scaling was fitted on training data only.
--   Exact SoLEXS/HEL1OS alignment and resampling implementation.
--   Exact target-generation code and flare-class qualification rule.
--   Exact list and order of the 424 feature names.
+| Model | 15 min | 30 min | 60 min |
+|---|---|---|---|
+| Extra Trees | 0.0640 | 0.1027 | 0.1991 |
+| Hist Gradient Boosting | 0.0658 | 0.1138 | 0.2410 |
+| LightGBM | 0.0524 | 0.0855 | 0.1979 |
+| Logistic Regression | 0.0651 | **0.1230** | 0.2183 |
+| Random Forest | **0.0759** | 0.1208 | **0.2503** |
+| CNN | 0.0532 | 0.0827 | 0.1271 |
+| CNN AvgMax | 0.0353 | 0.0824 | 0.1692 |
+| CNN-LSTM | 0.0326 | 0.0924 | 0.1777 |
+| XGBoost | 0.0239 | 0.0719 | 0.1498 |
 
-The deep-learning run folders do contain `preprocessing.npz` and
-`feature_names.json`, which should be retained alongside model
-checkpoints.
+</details>
 
-------------------------------------------------------------------------
+### 9.3 How good is that, really?
 
-## 5. Target definition and class imbalance
+A model guessing at random would score about the share of flare rows in the test month. Comparing the best model with that level gives a fair sense of real skill.
 
-### 5.1 Forecast targets
+![Lift over random](figures/fig5_lift_over_random.png)
 
-Three separate binary targets were trained:
+*Figure 5. The best model is roughly 3.4 to 4.1 times better than random guessing at every horizon.*
 
--   `15m`: flare onset within the next 15 minutes.
--   `30m`: flare onset within the next 30 minutes.
--   `60m`: flare onset within the next 60 minutes.
+| Horizon | Random-guess level | Best model | Improvement |
+|---|---|---|---|
+| 15 minutes | 0.0186 | 0.0759 | about 4.1 times |
+| 30 minutes | 0.0361 | 0.1230 | about 3.4 times |
+| 60 minutes | 0.0652 | 0.2503 | about 3.8 times |
 
-The target is defined at each minute-end timestamp. The recorded
-convention is:
+### 9.4 Key takeaways
 
-``` text
-timestamp 00:01 represents interval [00:00, 00:01)
-```
+- **Simple models won.** Random Forest and Logistic Regression beat the more complex deep-learning models on this benchmark.
+- **Higher scores at longer horizons are not automatically better skill.** The share of flare rows also grows with the horizon, which lifts the score.
+- **Deep models peaked very early.** Most reached their best validation score at epoch 1, which suggests they over-fit the training months quickly.
 
-A positive label means a qualifying flare onset occurs in the future
-horizon. The precise flare-class inclusion criteria for row-level target
-generation should be confirmed from the label-generation code.
-Event-level evaluation later uses GOES M/X events.
+![Deep learning epochs](figures/fig7_deep_epochs.png)
 
-### 5.2 Class imbalance
+*Figure 6. Best epoch versus epochs run for each deep model. Seven of the nine runs peaked by epoch 4, and six of them at epoch 1.*
 
-The forecasting task is highly imbalanced. One recorded training split
-for the 15-minute task had:
+### 9.5 Event-level example: Random Forest, 15 minutes
 
--   198,111 cleaned training rows
--   1,299 positive rows
--   196,812 negative rows
--   Positive prevalence: approximately 0.656%
--   Negative-to-positive ratio (`scale_pos_weight` / positive weighting
-    basis): approximately 151.51
+| Quantity | Value |
+|---|---|
+| GOES M/X events in July | 56 |
+| Events detected | **41** (about 73%) |
+| M-class and X-class matched | 40 and 1 |
+| Average lead time | **13.68 minutes** |
+| Median lead time | **15 minutes** |
+| Alerts with exactly 15 minutes of lead | 33 of 41 (about 80.5%) |
 
-The deep-learning sequence dataset has fewer samples because sequences
-require a complete 60-minute history and continuity.
+> **Read with care:** only **one** X-class flare was matched, so no claim about X-class performance can be made. Lead times also bunch at 15 minutes partly because of the matching rule, which picks the *first* qualifying alert in the window. It does not prove every flare was predicted exactly 15 minutes ahead.
 
-For the CNN 15m run, the sequence counts were:
+### 9.6 Detection versus false alarms
 
-  Split          Sequences   Positive sequences   Negative sequences
-  ------------ ----------- -------------------- --------------------
-  Train            192,190                1,037              191,153
-  Validation        38,696                  225               38,471
-  Test              38,761                  542               38,219
+![Event trade-off](figures/fig6_event_tradeoff.png)
 
-The CNN 15m training `pos_weight` was approximately **184.33**,
-calculated from the sequence training class distribution.
+*Figure 7. Each point is one classical or XGBoost model at one horizon. The best spot is the top left: many flares caught with few false alarms.*
 
-Do not confuse cleaned row counts with sequence counts. They represent
-different stages of the data pipeline.
+| Model and horizon | Events detected (of 56) | False-alarm episodes per day |
+|---|---|---|
+| LightGBM, 60 min | 52 | 14.5 |
+| Random Forest, 60 min | 50 | 26.7 |
+| Random Forest, 30 min | 45 | 10.3 |
+| Random Forest, 15 min | 41 | 8.8 |
 
-------------------------------------------------------------------------
+Catching more flares often comes with more false alarms. The best balance depends on how costly a false alarm is in practice.
 
-## 6. Chronological dataset splitting
+> Event-level results for the three deep-learning models are not available yet because of a naming problem in the evaluation script (see Section 10).
 
-The project uses chronological partitions:
+---
 
-  -----------------------------------------------------------------------
-  Split                   Date range              Role
-  ----------------------- ----------------------- -----------------------
-  Training                1 January--31 May 2026  Fit model parameters
+## 10. Limitations
 
-  Validation              1 June--30 June 2026    Model selection, early
-                                                  stopping, threshold
-                                                  selection
+| Issue | What it means |
+|---|---|
+| **July is not untouched** | It was used in earlier experiments, so the scores are exploratory and not final proof |
+| **Naming problem in the event evaluator** | All nine deep-learning runs were given the generic label `forecast`, so their event results cannot safely be matched to a model |
+| **Coverage gaps** | The evaluator counts events even where the prediction data has gaps, so detection may be underestimated |
+| **Very few large flares** | Only one X-class event was matched in the example, so no strong X-class claim is possible |
+| **One test month, one run** | There are no repeated runs or confidence intervals yet |
+| **Threshold policy** | Deep-model thresholds were chosen on validation data. For the classical models this still needs confirming |
+| **Narrow scope** | One mission and one time span in 2026 |
 
-  Test                    July 2026               Exploratory
-                                                  final-period evaluation
-  -----------------------------------------------------------------------
+### Details still to be recovered from the original code
 
-The split is time-based. It is not a random train/test split.
+These were not saved in the project notes, and **none of them has been guessed**:
 
-### 6.1 Training split
+- the exact list of downloaded files, their dates and checksums,
+- how the two instruments were aligned and resampled,
+- how missing values and outliers were handled,
+- which scaler was used, and whether it was fitted on training data only,
+- the exact rule for which flare classes count as a positive label,
+- the full list of the 424 feature names, and whether the hard-to-soft ratio is included,
+- the hyper-parameters of each model, plus optimizer, learning rate and batch size.
 
-The model learns its parameters from January through May 2026.
+---
 
-### 6.2 Validation split
+## 11. Project Status and Next Steps
 
-June 2026 is used for model selection and validation. Deep-learning
-early stopping and the selected classification threshold are based on
-validation data.
+| Stage | Status |
+|---|---|
+| Data download from PRADAN | Done (full file list still to be recovered) |
+| FITS inspection | Done for the 5 November 2026 test day |
+| Minute-level dataset with 424 features | Ready |
+| 15, 30 and 60 minute targets | Ready |
+| Time-based split | Done |
+| 5 classical models x 3 horizons | Trained |
+| XGBoost x 3 horizons | Trained |
+| 3 deep models x 3 horizons | Trained |
+| Sample-level comparison | Done and checked |
+| Event-level evaluation | Run, but **preliminary** |
+| Master results file (27 rows, 69 columns) | Created and checked |
 
-### 6.3 Test split
+### Next steps
 
-July 2026 is used for test metrics. However, July was already used in
-earlier experiments and comparisons. Therefore, it is an **exploratory
-benchmark**, not a pristine untouched holdout set. Do not describe it as
-an untouched independent final test set.
+1. Fix the event evaluator (model names and coverage) and re-run it. Save a **new** version of the outputs instead of overwriting the old ones.
+2. Test on a **later, untouched** period.
+3. Add repeated runs and confidence intervals.
+4. Compare SoLEXS-only, HEL1OS-only and combined inputs.
 
-### 6.4 Example row counts
+---
 
-For the 15-minute task, one recorded cleaned-row split was:
+## 12. Mini Dictionary
 
-  Split             Rows   Positive rows   Positive rate
-  ------------ --------- --------------- ---------------
-  Train          198,111           1,299          0.656%
-  Validation      39,817             225          0.565%
-  Test            41,729             776          1.860%
+| Term | Easy meaning |
+|---|---|
+| **Solar flare** | A sudden burst of energy from the Sun |
+| **X-ray** | A kind of light that our eyes cannot see |
+| **Aditya-L1** | India's solar observatory satellite |
+| **SoLEXS and HEL1OS** | The two X-ray instruments on Aditya-L1 |
+| **GOES** | US satellites whose flare list is used as the answer key |
+| **FITS and HDU** | An astronomy file format, and one section inside such a file |
+| **GTI** | Time periods when the instrument data is valid |
+| **Feature** | One input clue for the model |
+| **Target** | The answer the model should predict |
+| **Horizon** | How far ahead we predict (15, 30 or 60 minutes) |
+| **Class imbalance** | One answer, here "no flare", is far more common than the other |
+| **Chronological split** | Splitting the data by time and not at random |
+| **Data leakage** | Letting the model accidentally see the answer |
+| **Threshold** | The probability level above which an alert is raised |
+| **Precision, recall, F1** | Alert accuracy, catch rate, and a balance of the two |
+| **PR-AUC** | One score for rare-event quality; higher is better |
+| **False alarm** | An alert that is not followed by a real flare |
+| **Lead time** | How many minutes early the alert came |
+| **CNN and LSTM** | Neural networks: one finds patterns, the other remembers sequences |
 
-For the CNN 15m run, after constructing valid 60-minute sequences:
+---
 
-  Split          Sequences
-  ------------ -----------
-  Train            192,190
-  Validation        38,696
-  Test              38,761
+## Key Files in the Project
 
-These counts illustrate why sequence counts differ from cleaned-row
-counts. Other horizons can have different positive counts because their
-forecast targets differ.
+| File | What it holds |
+|---|---|
+| `output/ml_ready_minute_end_v2/` | The ready-to-use dataset (about 2.6 GB) |
+| `output/goes_events_parsed.csv` | The GOES flare list |
+| `output/model_results/ARUNX_MASTER_MODEL_EVALUATION.csv` | One file with all 27 model results |
+| `scripts/ml/evaluate_event_level.py` | The event-level evaluator |
+| `scripts/ml/build_master_model_evaluation.py` | Builds the master results file |
 
-### 6.5 Leakage rules
+---
 
--   Do not randomly shuffle observations across chronological splits.
--   Do not fit preprocessing/scaling parameters using validation or test
-    data.
--   Do not use July test metrics to tune hyperparameters, select epochs,
-    or choose thresholds.
--   Select thresholds using validation predictions only.
--   Preserve the existing split boundaries unless a documented new
-    experiment explicitly changes them.
-
-------------------------------------------------------------------------
-
-## 7. Model training inventory
-
-The current experiment contains **9 model families × 3 horizons = 27
-model-horizon runs**.
-
-### 7.1 Traditional machine-learning baselines
-
-Five baseline families were trained for 15m, 30m, and 60m:
-
-1.  Logistic Regression
-2.  Random Forest
-3.  Extra Trees
-4.  Hist Gradient Boosting
-5.  LightGBM
-
-Total baseline runs: **15**.
-
-Prediction files:
-
-``` text
-output/model_results/baselines/{model}_{15,30,60}m_predictions.csv
-```
-
-Aggregate metric files:
-
-``` text
-output/model_results/baselines/all_validation_metrics.csv
-output/model_results/baselines/all_test_metrics.csv
-```
-
-### 7.2 XGBoost
-
-XGBoost was trained for all three horizons.
-
-Total XGBoost runs: **3**.
-
-Prediction files:
-
-``` text
-output/model_results/forecasting/xgboost_15m_predictions.csv
-output/model_results/forecasting/xgboost_30m_predictions.csv
-output/model_results/forecasting/xgboost_60m_predictions.csv
-```
-
-Recorded best iterations:
-
-  Horizon     Best iteration
-  --------- ----------------
-  15m                      9
-  30m                     18
-  60m                    104
-
-Recorded validation PR-AUC:
-
-  Horizon     Validation PR-AUC
-  --------- -------------------
-  15m                    0.0166
-  30m                    0.0231
-  60m                    0.0317
-
-These values are experiment records, not universal performance claims.
-The exact XGBoost hyperparameters and early-stopping configuration
-should be recovered from the training script/configuration.
-
-### 7.3 Deep-learning architectures
-
-Three architectures were trained for each horizon:
-
-1.  CNN
-2.  CNN AvgMax
-3.  CNN-LSTM
-
-Total deep-learning runs: **9**.
-
-Each run folder contains artifacts such as:
-
--   `training_history.csv`
--   `metrics.json`
--   `best_model.pt`
--   `experiment_config.json`
--   `feature_names.json`
--   `preprocessing.npz`
--   `forecast_{15,30,60}m_predictions.csv`
-
-Directory layout:
-
-``` text
-output/model_results/deep_learning/
-├── cnn/
-│   ├── forecast_15m/
-│   ├── forecast_30m/
-│   └── forecast_60m/
-├── cnn_avgmax/
-│   ├── forecast_15m/
-│   ├── forecast_30m/
-│   └── forecast_60m/
-└── cnn_lstm/
-    ├── forecast_15m/
-    ├── forecast_30m/
-    └── forecast_60m/
-```
-
-The deep-learning models used:
-
--   Sequence length: **60**
--   Feature count: **424**
--   Device recorded in metrics: **CUDA**
--   Weighted binary cross-entropy training loss using a positive-class
-    weight.
--   Validation loss recorded as unweighted BCE from logits.
-
-The weighted training loss and unweighted validation loss are not
-directly comparable because they use different weighting.
-
-Recorded system context:
-
--   CPU: Intel Core i5-13450HX
--   GPU: NVIDIA RTX 3050 Laptop GPU, 6 GB VRAM
--   System RAM: 8 GB
--   Python: 3.12.3
--   Project virtual environment: `venv`
-
-Sequential training and limiting CPU threads were preferred to avoid
-excessive memory pressure. The exact thread setting and batch sizes
-should be taken from each `experiment_config.json`.
-
-### 7.4 Deep-learning best-epoch records
-
-  --------------------------------------------------------------------------
-  Architecture          Horizon     Best epoch     Epochs run           Best
-                                                                  validation
-                                                                      PR-AUC
-  -------------- -------------- -------------- -------------- --------------
-  CNN                       15m              8             14       0.008529
-
-  CNN                       30m              1              7       0.016554
-
-  CNN                       60m              4             10       0.028829
-
-  CNN AvgMax                15m              1              7       0.009546
-
-  CNN AvgMax                30m              1              7       0.015743
-
-  CNN AvgMax                60m              1              7       0.025699
-
-  CNN-LSTM                  15m             11             17       0.015604
-
-  CNN-LSTM                  30m              1              7       0.018721
-
-  CNN-LSTM                  60m              1              7       0.031164
-  --------------------------------------------------------------------------
-
-The authoritative per-run records are each run's `metrics.json` and
-`experiment_config.json`.
-
-------------------------------------------------------------------------
-
-## 8. Prediction files and sample-level evaluation
-
-Each trained model produced prediction files. The comparison stage
-consolidated model metrics.
-
-### 8.1 Comparison outputs
-
-The consolidated comparison files are:
-
-``` text
-output/model_results/comparisons/all_models_validation_metrics.csv
-output/model_results/comparisons/all_models_test_metrics.csv
-```
-
-The recorded comparison files contain 18 rows each:
-
--   5 baseline families × 3 horizons = 15
--   XGBoost × 3 horizons = 3
-
-They do not include the 9 deep-learning rows. Deep-learning metrics are
-read from each architecture/horizon `metrics.json`.
-
-### 8.2 Metrics recorded
-
-The comparison/evaluation records include:
-
--   Accuracy
--   Precision
--   Recall
--   F1-score
--   PR-AUC
--   ROC-AUC
--   True negatives (TN)
--   False positives (FP)
--   False negatives (FN)
--   True positives (TP)
--   Sample count
--   Positive sample count
--   Specificity
--   False-positive rate
--   False alarms per day
--   Observed/evaluated days
--   Prevalence
--   Threshold
--   Training time, where available
-
-For imbalanced flare forecasting, PR-AUC, precision, recall, F1, and
-false alarms are important. Accuracy alone can be misleading because
-negative samples dominate.
-
-### 8.3 Threshold selection
-
-The deep-learning `metrics.json` files record a validation-selected
-threshold. The same threshold is then applied to the test predictions.
-
-Do not choose a threshold from the July test set and report that as an
-unbiased test result. Threshold selection should be done using
-validation data.
-
-------------------------------------------------------------------------
-
-## 9. Event-level evaluation
-
-Sample-level classification asks whether individual minute samples are
-positive. Event-level evaluation asks whether the model generated an
-alert episode associated with a real GOES M/X event.
-
-The event-level evaluator used was:
-
-``` text
-scripts/ml/evaluate_event_level.py
-```
-
-The command executed was:
-
-``` bash
-python scripts/ml/evaluate_event_level.py \
-  --pred-dir output/model_results \
-  --goes-file output/goes_events_parsed.csv \
-  --output-dir output/model_results/event_level
-```
-
-Recorded evaluator settings/results:
-
--   GOES M/X catalogue events: **231**
--   Prediction files found: **27**
--   Alert-episode gap: **1 minute**
--   July prediction period contained **56 GOES M/X events** in the event
-    summary.
-
-### 9.1 Event-level outputs
-
-The summary file is:
-
-``` text
-output/model_results/event_level/event_level_summary.csv
-```
-
-The summary contains 27 rows, one per prediction file/horizon.
-
-The event-level fields include:
-
--   GOES M/X events in period
--   GOES events in association window
--   Detected events
--   Missed events
--   Event detection rate
--   Alert episode precision
--   Alert episodes
--   Episodes associated with events
--   False-alarm episodes
--   Redundant associated episodes
--   False alarms per day
--   Mean, median, minimum, and maximum lead time
--   Row-level TP, FP, and FN
--   Observed coverage and missing timestamp minutes
-
-### 9.2 Event-level evaluator limitation
-
-The event-level evaluator currently has a model-name collision for
-deep-learning prediction files. It labels all nine deep-learning runs
-with the generic name:
-
-``` text
-forecast
-```
-
-Consequences:
-
-1.  Deep-learning event metrics cannot safely be joined to `cnn`,
-    `cnn_avgmax`, or `cnn_lstm`.
-2.  Detailed event-match output filenames can collide/overwrite because
-    the generic model prefix is reused.
-3.  The current event evaluator counts M/X events in the period even
-    when the prediction series has gaps or does not provide full
-    preceding horizon coverage.
-
-The current event-level results are therefore **preliminary**. The
-coverage issue was identified, but the decision at the time was to leave
-the evaluator unchanged and inspect the current output first. Do not
-describe these event metrics as fully validated.
-
-### 9.3 Example event-match inspection
-
-The following file was inspected:
-
-``` text
-output/model_results/event_level/random_forest_15m_event_matches.csv
-```
-
-It contained 41 matched events.
-
-Recorded class distribution:
-
--   M-class: 40
--   X-class: 1
-
-Lead-time statistics:
-
--   Mean: 13.68 minutes
--   Median: 15 minutes
--   Exactly 15-minute lead: 33 of 41 detected events (about 80.5%)
-
-This is a small, specific sample. The one detected X-class event is not
-enough to claim reliable X-class performance. The concentration of
-15-minute lead times also needs to be interpreted in light of the
-matching rule: it selects the first qualifying alert in the forecast
-window. It is not, by itself, proof that the model predicted every flare
-exactly 15 minutes in advance.
-
-------------------------------------------------------------------------
-
-## 10. Master model evaluation CSV
-
-The central model-evaluation record was created at:
-
-``` text
-output/model_results/ARUNX_MASTER_MODEL_EVALUATION.csv
-```
-
-The build script is:
-
-``` text
-scripts/ml/build_master_model_evaluation.py
-```
-
-The command executed was:
-
-``` bash
-python scripts/ml/build_master_model_evaluation.py
-```
-
-The script combines:
-
--   Classical model and XGBoost validation metrics from
-    `all_models_validation_metrics.csv`.
--   Classical model and XGBoost test metrics from
-    `all_models_test_metrics.csv`.
--   Deep-learning validation/test metrics from the nine `metrics.json`
-    files.
--   Event-level metrics for uniquely named classical/XGBoost
-    model-horizon rows.
--   Model metadata and source paths where available.
-
-Deep-learning event-level fields are deliberately left blank because the
-current event summary uses the ambiguous generic model name `forecast`.
-
-### 10.1 Verified master-file structure
-
-The user ran a verification script and confirmed:
-
-``` text
-Shape: (27, 69)
-Duplicate model-horizon pairs: 0
-```
-
-Records per horizon:
-
-  Horizon       Records
-  ----------- ---------
-  15m                 9
-  30m                 9
-  60m                 9
-  **Total**      **27**
-
-Family distribution:
-
-  Family                    Records
-  ----------------------- ---------
-  baselines                      15
-  forecasting (XGBoost)           3
-  deep_learning                   9
-  **Total**                  **27**
-
-The master CSV was further checked to confirm:
-
--   Missing validation PR-AUC values: **0**
--   Missing test PR-AUC values: **0**
-
-Some other missing values are expected because fields differ by model
-type. For example, deep-learning-only fields such as `best_epoch` do not
-apply to classical models. Event-level fields for deep-learning rows
-remain blank pending the evaluator naming fix.
-
-------------------------------------------------------------------------
-
-## 11. Recorded sample-level test PR-AUC results
-
-The following table is taken from the verified master CSV output.
-
-  Model                        15m PR-AUC   30m PR-AUC     60m PR-AUC
-  ------------------------ -------------- ------------ --------------
-  Extra Trees                    0.063976     0.102744       0.199055
-  Hist Gradient Boosting         0.065753     0.113837       0.240954
-  LightGBM                       0.052383     0.085457       0.197876
-  Logistic Regression            0.065112     0.122951       0.218312
-  Random Forest              **0.075860**     0.120793   **0.250289**
-  CNN                            0.053221     0.082741       0.127108
-  CNN AvgMax                     0.035275     0.082399       0.169229
-  CNN-LSTM                       0.032647     0.092383       0.177737
-  XGBoost                        0.023912     0.071911       0.149778
-
-Best sample-level test PR-AUC among the nine model families in the
-current July benchmark:
-
-  Horizon   Model                   Test PR-AUC
-  --------- --------------------- -------------
-  15m       Random Forest              0.075860
-  30m       Logistic Regression        0.122951
-  60m       Random Forest              0.250289
-
-**Interpretation caution:** July has a higher positive prevalence than
-June in the recorded 15-minute split. PR-AUC depends on class
-prevalence. These July results are exploratory and should not be
-presented as a final unbiased estimate of future operational
-performance.
-
-------------------------------------------------------------------------
-
-## 12. Reproducibility: commands and checks currently confirmed
-
-### 12.1 Inspect FITS files
-
-The inspection script used was:
-
-``` bash
-python inspect_lightcurves.py
-```
-
-It used Astropy FITS/time functionality. The exact original invocation
-path and full script content should be retained in the repository.
-
-### 12.2 Run event-level evaluation
-
-``` bash
-python scripts/ml/evaluate_event_level.py \
-  --pred-dir output/model_results \
-  --goes-file output/goes_events_parsed.csv \
-  --output-dir output/model_results/event_level
-```
-
-### 12.3 Build the master evaluation CSV
-
-``` bash
-python scripts/ml/build_master_model_evaluation.py
-```
-
-### 12.4 Verify the master CSV
-
-``` bash
-python - <<'PY'
-import pandas as pd
-
-path = "output/model_results/ARUNX_MASTER_MODEL_EVALUATION.csv"
-df = pd.read_csv(path)
-
-print("Shape:", df.shape)
-print("Duplicate model-horizon pairs:",
-      df.duplicated(["model", "horizon"]).sum())
-
-print(df[["family", "model", "horizon"]].to_string(index=False))
-
-print("\nMissing PR-AUC values:")
-print("Validation:", df["val_pr_auc"].isna().sum())
-print("Test:", df["test_pr_auc"].isna().sum())
-PY
-```
-
-Expected checks based on the completed run:
-
-``` text
-Shape: (27, 69)
-Duplicate model-horizon pairs: 0
-Validation missing PR-AUC: 0
-Test missing PR-AUC: 0
-```
-
-------------------------------------------------------------------------
-
-## 13. Important limitations and items to verify before a professor-facing final report
-
-The current master CSV is a valid central experiment record, but it is
-not by itself proof that the full scientific pipeline is completely
-validated.
-
-Before writing final claims, recover or verify:
-
-1.  **Download manifest:** exact bulk archive names, download date,
-    observation coverage, file sizes, checksums, and portal query
-    details.
-2.  **Data inventory:** exact SoLEXS and HEL1OS date coverage and
-    missing dates.
-3.  **Preprocessing source:** exact timestamp alignment, resampling,
-    cleaning, imputation, scaling, and transformation rules.
-4.  **Feature manifest:** exact 424 feature names and definitions.
-5.  **Target-generation code:** exact qualifying flare classes,
-    onset-time definition, and boundary handling.
-6.  **Split implementation:** verify the date filters and whether any
-    rows at split boundaries are excluded to prevent target-horizon
-    leakage.
-7.  **Training configurations:** exact hyperparameters, batch sizes,
-    optimizer, learning rate, scheduler, early stopping, random seeds,
-    and thread settings.
-8.  **Threshold policy:** verify that all reported thresholds were
-    selected on validation only.
-9.  **Event-level naming:** fix the generic `forecast` architecture name
-    and rerun event evaluation so all nine deep-learning architectures
-    have correctly named outputs.
-10. **Event coverage:** revise event eligibility to require adequate
-    prediction coverage for the relevant horizon, then rerun event-level
-    evaluation.
-11. **Independent test:** because July has already been used in
-    experiments, reserve a later untouched period or use a carefully
-    designed time-based evaluation for a stronger final performance
-    claim.
-
-Do not overwrite existing results when fixing the event evaluator. Save
-a new version of the event-level outputs or back up the current
-preliminary results first.
-
-------------------------------------------------------------------------
-
-## 14. Recommended experiment record policy
-
-For every new experiment, retain:
-
--   Dataset version and checksum/manifest.
--   Git commit or source-code version.
--   Configuration file.
--   Feature-name file.
--   Preprocessing/scaler artifacts.
--   Model checkpoint.
--   Training history.
--   Validation metrics.
--   Test metrics.
--   Prediction CSV.
--   Event-level summary and event-match files.
--   Date/time of run and software versions.
-
-Use distinct architecture-specific output names. Avoid generic names
-such as `forecast` when multiple architectures are evaluated.
-
-Keep raw downloaded data immutable. Store prepared data in a separate
-output directory. Do not silently replace existing predictions or
-metrics.
-
-------------------------------------------------------------------------
-
-## 15. Current project status
-
-  -----------------------------------------------------------------------
-  Stage                               Current status
-  ----------------------------------- -----------------------------------
-  PRADAN Aditya-L1 data               Performed; exact bulk manifest
-  access/download                     needs recovery
-
-  FITS extraction and inspection      Performed for the documented 5 Nov
-                                      2026 test data
-
-  ML-ready minute-end dataset         Available at
-                                      `output/ml_ready_minute_end_v2/`
-
-  Feature set                         424 features recorded
-
-  Forecast horizons                   15m, 30m, 60m
-
-  Chronological splits                Jan--May train, June validation,
-                                      July test
-
-  Traditional baselines               5 families × 3 horizons trained
-
-  XGBoost                             3 horizons trained
-
-  Deep learning                       CNN, CNN AvgMax, CNN-LSTM × 3
-                                      horizons trained
-
-  Sample-level comparison             Consolidated and verified
-
-  Event-level evaluation              Run; preliminary coverage and
-                                      naming issues remain
-
-  Master evaluation CSV               Created and structurally verified
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-## 16. Final artifact reference
-
-**Central evaluation file:**
-
-``` text
-output/model_results/ARUNX_MASTER_MODEL_EVALUATION.csv
-```
-
-**Build script:**
-
-``` text
-scripts/ml/build_master_model_evaluation.py
-```
-
-**Event-level evaluator:**
-
-``` text
-scripts/ml/evaluate_event_level.py
-```
-
-The master CSV is the current single-file index of model/horizon
-validation and test metrics. Use this document together with the actual
-preprocessing/training scripts and per-run configuration files when
-preparing a formal research report.
+<p align="center"><b>ARUN-X</b> | Forecasting solar flares from space X-rays</p>
