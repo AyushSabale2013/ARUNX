@@ -1,0 +1,19 @@
+task,split,rows,target_distribution,file
+classification,train,183280,"{0: 181036, 1: 1974, 2: 270}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\classification_train.parquet
+classification,validation,36896,"{0: 36463, 1: 391, 2: 42}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\classification_validation.parquet
+classification,test,41047,"{0: 39694, 1: 1335, 2: 18}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\classification_test.parquet
+nowcasting,train,183280,"{0: 181036, 1: 2244}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\nowcasting_train.parquet
+nowcasting,validation,36896,"{0: 36463, 1: 433}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\nowcasting_validation.parquet
+nowcasting,test,41047,"{0: 39694, 1: 1353}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\nowcasting_test.parquet
+peak_detection,train,183280,"{0: 183196, 1: 84}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\peak_detection_train.parquet
+peak_detection,validation,36896,"{0: 36881, 1: 15}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\peak_detection_validation.parquet
+peak_detection,test,41047,"{0: 40991, 1: 56}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\peak_detection_test.parquet
+forecast_15m,train,180758,"{0: 179663, 1: 1095}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_15m_train.parquet
+forecast_15m,validation,36417,"{0: 36192, 1: 225}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_15m_validation.parquet
+forecast_15m,test,39621,"{0: 38847, 1: 774}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_15m_test.parquet
+forecast_30m,train,180469,"{0: 178388, 1: 2081}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_30m_train.parquet
+forecast_30m,validation,36372,"{0: 35926, 1: 446}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_30m_validation.parquet
+forecast_30m,test,39546,"{0: 38043, 1: 1503}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_30m_test.parquet
+forecast_60m,train,179898,"{0: 176036, 1: 3862}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_60m_train.parquet
+forecast_60m,validation,36282,"{0: 35392, 1: 890}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_60m_validation.parquet
+forecast_60m,test,39397,"{0: 36702, 1: 2695}",D:\ARUN-X\ARUNX\output\preprocessing_runs\preproc_20261124_v1\ml_ready\forecast_60m_test.parquet

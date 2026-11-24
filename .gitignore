@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # ============================================================
 # ARUN-X | Git Ignore
@@ -12,6 +13,12 @@ __pycache__/
 *.pyd
 *.so
 *.egg
+=======
+# Python build and runtime cache
+__pycache__/
+*.py[cod]
+*.pyd
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 *.egg-info/
 .eggs/
 wheels/
@@ -22,6 +29,7 @@ dist/
 .mypy_cache/
 .ruff_cache/
 .tox/
+<<<<<<< HEAD
 .nox/
 .coverage
 .coverage.*
@@ -30,12 +38,19 @@ htmlcov/
 # ----------------------------
 # Virtual Environments
 # ----------------------------
+=======
+htmlcov/
+coverage.xml
+
+# Local Python environments
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 venv/
 .venv/
 env/
 ENV/
 .python-version
 
+<<<<<<< HEAD
 # ----------------------------
 # Environment Variables & Secrets
 # ----------------------------
@@ -88,6 +103,65 @@ session.dat
 # ----------------------------
 # Machine Learning / Deep Learning
 # ----------------------------
+=======
+# Secrets and machine-local credentials. Keep safe templates trackable.
+.env
+.env.*
+!.env.example
+!.env.*.example
+.netrc
+_netrc
+.pypirc
+.npmrc
+credentials/
+secrets/
+**/credentials/
+**/secrets/
+*credentials*.json
+*cookies*.txt
+*cookies*.json
+*.secret
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# Raw Aditya-L1 data and downloaded archives (large, externally sourced)
+/raw_hel1os/
+/raw_solexs/
+/downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/
+/goes/*.txt
+*.zip
+*.fits
+*.fit
+*.fts
+*.fits.gz
+*.fit.gz
+*.fts.gz
+*.tar
+*.tar.gz
+*.tgz
+
+# Generated and intermediate dataset binaries, including the canonical master.
+# Keep JSON schemas, source-run manifests, small reports, and documentation.
+*.parquet
+*.feather
+*.arrow
+*.npy
+*.npz
+*.hdf5
+*.h5
+*.tfrecord
+*.tfrecords
+*.part
+*.partial
+*.tmp
+/output/checkpoints/
+/output/**/checkpoints/
+/output/**/checkpoints_*/
+
+# Model weights, serialized estimators, and local experiment/checkpoint state.
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 *.pt
 *.pth
 *.ckpt
@@ -95,6 +169,7 @@ session.dat
 *.pkl
 *.pickle
 *.joblib
+<<<<<<< HEAD
 *.h5
 *.hdf5
 *.keras
@@ -232,3 +307,46 @@ settings.local.*
 # ----------------------------
 !.env.example
 !.env.template
+=======
+*.keras
+*.safetensors
+*.ubj
+*.model
+/models/forecasting/xgboost_forecast_*.json
+/output/model_results/
+/output/models/
+/output/experiments/
+/mlruns/
+/wandb/
+/lightning_logs/
+/tensorboard/
+
+# Local logs and temporary extraction/cache folders
+/logs/
+*.log
+*.log.*
+*.out
+*.err
+/tmp/
+/temp/
+/.cache/
+**/.cache/
+**/tmp_extract/
+**/extracted_tmp/
+
+# Jupyter and editor/OS state
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+*.swp
+*.swo
+*.bak
+.idea/
+.vscode/
+
+# Node dependencies, if auxiliary tooling is added later
+node_modules/
+npm-debug.log*
+>>>>>>> a3cfcab (Implemented full data preprocessing)

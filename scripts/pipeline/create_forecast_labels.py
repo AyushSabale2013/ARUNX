@@ -24,6 +24,8 @@ A prediction timestamp represents the end of a completed minute.
 
 from pathlib import Path
 import shutil
+import argparse
+import os
 
 import numpy as np
 import pandas as pd
@@ -31,19 +33,13 @@ import pandas as pd
 
 BASE = Path(__file__).resolve().parents[2]
 
-INPUT_FILE = (
-    BASE / "output" /
-    "labeled_timeseries_minute_end_v2.parquet"
-)
+INPUT_FILE = Path(os.environ.get("ARUNX_LABELED_INPUT", str(BASE / "output" / "labeled_timeseries_minute_end_v2.parquet")))
 
-GOES_FILE = BASE / "output" / "goes_events_parsed.csv"
+GOES_FILE = Path(os.environ.get("ARUNX_GOES_FILE", str(BASE / "output" / "goes_events_parsed.csv")))
 
-OUTPUT_FILE = (
-    BASE / "output" /
-    "forecast_labeled_timeseries_minute_end_v2.parquet"
-)
+OUTPUT_FILE = Path(os.environ.get("ARUNX_FORECAST_OUTPUT", str(BASE / "output" / "forecast_labeled_timeseries_minute_end_v2.parquet")))
 
-HORIZONS = [15, 30, 60]
+HORIZONS = [int(value) for value in os.environ.get("ARUNX_HORIZONS_MINUTES", "15,30,60").split(",") if value.strip()]
 
 
 def datetime_to_ns(series):
@@ -146,6 +142,17 @@ def build_observation_segments(timestamps, usable):
 
 
 def main():
+
+    global INPUT_FILE, GOES_FILE, OUTPUT_FILE
+    parser = argparse.ArgumentParser(description="Create segment-aware future flare targets.")
+    parser.add_argument("--input", type=Path, default=INPUT_FILE)
+    parser.add_argument("--goes", type=Path, default=GOES_FILE)
+    parser.add_argument("--output", type=Path, default=OUTPUT_FILE)
+    parser.add_argument("--overwrite", action="store_true")
+    args = parser.parse_args()
+    INPUT_FILE, GOES_FILE, OUTPUT_FILE = args.input, args.goes, args.output
+    if OUTPUT_FILE.exists() and not args.overwrite:
+        raise FileExistsError(f"Refusing to overwrite existing output: {OUTPUT_FILE}")
 
     if not INPUT_FILE.exists():
         raise FileNotFoundError(INPUT_FILE)
@@ -460,23 +467,20 @@ def main():
         exist_ok=True
     )
 
-    if OUTPUT_FILE.exists():
-
-        backup_file = OUTPUT_FILE.with_name(
-            OUTPUT_FILE.stem + "_previous.parquet"
-        )
-
-        print("\nExisting output found.")
-        print("Creating backup:", backup_file)
-
-        shutil.copy2(
-            OUTPUT_FILE,
-            backup_file
-        )
-
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(
         OUTPUT_FILE,
         index=False
+    )
+
+    forecast_summary = []
+    for horizon in HORIZONS:
+        column = f"flare_{horizon}m"
+        for target, count in df[column].value_counts(dropna=False).sort_index().items():
+            forecast_summary.append({"horizon_minutes": horizon, "target": int(target), "rows": int(count)})
+    pd.DataFrame(forecast_summary).to_csv(
+        OUTPUT_FILE.parent / "forecast_target_distribution.csv",
+        index=False,
     )
 
     # --------------------------------------------------------

@@ -1,0 +1,4 @@
+date,hel1os_archives,solexs_archives,hel1os_extracted_lightcurves_present,solexs_extracted_lightcurve_present,merge_status
+2026-01-10,2,1,False,True,MERGED
+2026-01-11,3,1,False,True,MERGED
+2026-01-12,2,1,False,True,MERGED

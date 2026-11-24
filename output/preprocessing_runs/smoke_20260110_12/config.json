@@ -1,0 +1,61 @@
+{
+  "date_range": {
+    "start": "2026-01-10",
+    "end": "2026-01-12"
+  },
+  "paths": {
+    "archive_root": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData",
+    "hel1os_raw": "raw_hel1os",
+    "solexs_raw": "raw_solexs",
+    "goes_catalogue": "goes/goes_xray_event_list_2026.txt",
+    "run_root": "output/preprocessing_runs"
+  },
+  "time_grid": {
+    "frequency": "1min",
+    "timestamp_label": "minute_end_utc"
+  },
+  "merge": {
+    "workers": 2,
+    "require_all_hel1os_detectors": true,
+    "require_solexs_sdd2": true
+  },
+  "features": {
+    "rolling_windows_minutes": [
+      5,
+      15,
+      30,
+      60
+    ],
+    "difference_lags_minutes": [
+      1,
+      5,
+      15
+    ],
+    "row_policy": "both_instruments"
+  },
+  "targets": {
+    "active_and_class_classes": [
+      "M",
+      "X"
+    ],
+    "forecast_classes": [
+      "M",
+      "X"
+    ],
+    "forecast_horizons_minutes": [
+      15,
+      30,
+      60
+    ]
+  },
+  "splits": {
+    "train_end_exclusive_utc": "2026-01-11T00:00:00Z",
+    "validation_end_exclusive_utc": "2026-01-12T00:00:00Z"
+  },
+  "acquisition": {
+    "request_timeout_seconds": 90,
+    "max_retries": 5,
+    "retry_backoff_seconds": 5,
+    "chunk_size_bytes": 1048576
+  }
+}

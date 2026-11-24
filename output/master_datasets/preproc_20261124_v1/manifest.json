@@ -1,0 +1,17 @@
+{
+  "dataset_run_id": "preproc_20261124_v1",
+  "source_run_manifest_sha256": "0530851936ee479c33625815431fe587bb0b7f5daec642fcf5428e76c8da4757",
+  "source_forecast_table_sha256": "43ebad815bcca02d5a6d73c956be604650a936015ee310fc8d3eefc23afa0878",
+  "feature_schema_sha256": "4876d7c2e6efdabeaea1d4dd15ffdc0326d42bcbc16dc52c9caf323667b0d242",
+  "master_file": "canonical_master_features_targets.parquet",
+  "master_sha256": "18e04fc4330af5f9c94242ac6c703c7358f998e965a61c339eb2311b0ebfa03c",
+  "schema_file": "canonical_master_schema.json",
+  "schema_sha256": "5e55a6730b4cddf246e4a68f13254fb3a534c6a7e2d3bbc3c54fd17fea2b1025",
+  "rows": 298080,
+  "columns": 705,
+  "feature_count": 592,
+  "first_timestamp_utc": "2026-01-01 00:01:00+00:00",
+  "last_timestamp_utc": "2026-08-01 00:00:00+00:00",
+  "represented_dates": 207,
+  "note": "Additive artifact. Original preprocessing outputs remain unchanged."
+}

@@ -15,26 +15,32 @@ Timestamp convention:
 """
 
 from pathlib import Path
+import argparse
+import os
 
 import pandas as pd
 
 
 BASE = Path(__file__).resolve().parents[2]
 
-INPUT_FILE = (
-    BASE / "output" / "merged" /
-    "merged_timeseries_minute_end_v2.parquet"
-)
+INPUT_FILE = Path(os.environ.get("ARUNX_MERGED_INPUT", str(BASE / "output" / "merged" / "merged_timeseries_minute_end_v2.parquet")))
 
-GOES_FILE = BASE / "output" / "goes_events_parsed.csv"
+GOES_FILE = Path(os.environ.get("ARUNX_GOES_FILE", str(BASE / "output" / "goes_events_parsed.csv")))
 
-OUTPUT_FILE = (
-    BASE / "output" /
-    "labeled_timeseries_minute_end_v2.parquet"
-)
+OUTPUT_FILE = Path(os.environ.get("ARUNX_LABELED_OUTPUT", str(BASE / "output" / "labeled_timeseries_minute_end_v2.parquet")))
+EVENT_REPORT = Path(os.environ["ARUNX_EVENT_REPORT"]) if os.environ.get("ARUNX_EVENT_REPORT") else None
 
 
 def main():
+
+    global INPUT_FILE, GOES_FILE, OUTPUT_FILE, EVENT_REPORT
+    parser = argparse.ArgumentParser(description="Create active/class/peak GOES labels.")
+    parser.add_argument("--input", type=Path, default=INPUT_FILE)
+    parser.add_argument("--goes", type=Path, default=GOES_FILE)
+    parser.add_argument("--output", type=Path, default=OUTPUT_FILE)
+    parser.add_argument("--event-report", type=Path, default=EVENT_REPORT)
+    args = parser.parse_args()
+    INPUT_FILE, GOES_FILE, OUTPUT_FILE, EVENT_REPORT = args.input, args.goes, args.output, args.event_report
 
     if not INPUT_FILE.exists():
         raise FileNotFoundError(INPUT_FILE)
@@ -108,6 +114,8 @@ def main():
     ].copy()
 
     events = events.sort_values("start").reset_index(drop=True)
+    if events.duplicated(subset=["start", "peak", "end", "class_type"]).any():
+        raise ValueError("Duplicate M/X GOES events found; resolve catalogue duplicates before labeling.")
 
     # --------------------------------------------------------
     # Initialize labels
@@ -119,6 +127,7 @@ def main():
 
     bin_end = df["timestamp"]
     bin_start = bin_end - pd.Timedelta(minutes=1)
+    event_rows = []
 
     # --------------------------------------------------------
     # Apply GOES event labels
@@ -156,6 +165,16 @@ def main():
         peak_mask = bin_end == peak_minute_end
 
         df.loc[peak_mask, "flare_peak"] = 1
+        event_rows.append({
+            "event_index": int(len(event_rows) + 1),
+            "start": event_start,
+            "peak": event["peak"],
+            "end": event_end,
+            "class": event["class"],
+            "class_type": event["class_type"],
+            "active_minutes_labeled": int(active.sum()),
+            "peak_minute_end_present": bool(peak_mask.any()),
+        })
 
     # --------------------------------------------------------
     # Validation
@@ -183,7 +202,13 @@ def main():
     # Save to a NEW output file
     # --------------------------------------------------------
 
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if OUTPUT_FILE.exists():
+        raise FileExistsError(f"Refusing to overwrite existing output: {OUTPUT_FILE}")
     df.to_parquet(OUTPUT_FILE, index=False)
+    report_path = EVENT_REPORT or (OUTPUT_FILE.parent / "mx_event_label_report.csv")
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(event_rows).to_csv(report_path, index=False)
 
     # --------------------------------------------------------
     # Report

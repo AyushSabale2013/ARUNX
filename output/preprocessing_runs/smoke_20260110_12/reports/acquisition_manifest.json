@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "source": "ISRO PRADAN / ISSDC Aditya-L1 archive",
+  "requested_date_range": {
+    "start_inclusive": "2026-01-10",
+    "end_inclusive": "2026-01-12"
+  },
+  "credential_policy": "PRADAN_COOKIE environment variable; no secret values stored",
+  "entries": [
+    {
+      "instrument": "HEL1OS",
+      "date": "20260110",
+      "filename": "HLS_20260110_000008_43179sec_lev1_V111.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/10/N00_0000/HLS_20260110_000008_43179sec_lev1_V111.zip",
+      "size_bytes": 41737538,
+      "expected_sha256": "",
+      "sha256": "469004ece3c00054318d36b321bcf1279f100e675f464c386757cefc923a69e6",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:36:54.922884+00:00"
+    },
+    {
+      "instrument": "HEL1OS",
+      "date": "20260110",
+      "filename": "HLS_20260110_120002_43189sec_lev1_V111.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/10/N00_0000/HLS_20260110_120002_43189sec_lev1_V111.zip",
+      "size_bytes": 42105422,
+      "expected_sha256": "",
+      "sha256": "747ee2a8e694e59add101ef1c1fa145a352b12d138b5372e99779503338ebdef",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:36:55.709203+00:00"
+    },
+    {
+      "instrument": "HEL1OS",
+      "date": "20260111",
+      "filename": "HLS_20260111_000006_43183sec_lev1_V111.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/11/N00_0000/HLS_20260111_000006_43183sec_lev1_V111.zip",
+      "size_bytes": 40795230,
+      "expected_sha256": "",
+      "sha256": "af956f1899ce09c9f8635b21a13fb084597c89da9b265c279b56583436a76ddb",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:36:56.472536+00:00"
+    },
+    {
+      "instrument": "HEL1OS",
+      "date": "20260111",
+      "filename": "HLS_20260111_120005_43193sec_lev1_V211.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/11/N00_0000/HLS_20260111_120005_43193sec_lev1_V211.zip",
+      "size_bytes": 55961990,
+      "expected_sha256": "",
+      "sha256": "8f58cbb79fe92858371f4632f65ad15519ff6ff132df94d9f39a891b242494a6",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:36:57.756023+00:00"
+    },
+    {
+      "instrument": "HEL1OS",
+      "date": "20260111",
+      "filename": "HLS_20260111_121028_42570sec_lev1_V111.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/11/N00_0000/HLS_20260111_121028_42570sec_lev1_V111.zip",
+      "size_bytes": 55826809,
+      "expected_sha256": "",
+      "sha256": "6576a6e241848e924f5d7e6bd4b20351c52c749e7c221a795789431b887be549",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:36:59.071430+00:00"
+    },
+    {
+      "instrument": "HEL1OS",
+      "date": "20260112",
+      "filename": "HLS_20260112_000006_43180sec_lev1_V111.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/12/N00_0000/HLS_20260112_000006_43180sec_lev1_V111.zip",
+      "size_bytes": 42569729,
+      "expected_sha256": "",
+      "sha256": "ffc729f351daacd6df1c53910efc9b8128916f23836f602c4937388e429b2953",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:36:59.961581+00:00"
+    },
+    {
+      "instrument": "HEL1OS",
+      "date": "20260112",
+      "filename": "HLS_20260112_120003_43186sec_lev1_V111.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/hel1os/level1/2026/01/12/N00_0000/HLS_20260112_120003_43186sec_lev1_V111.zip",
+      "size_bytes": 41240728,
+      "expected_sha256": "",
+      "sha256": "da79dab1c98962f08d6ad06796efe22a480dedaef9f1de2807d35feb44d51d9d",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:37:00.800819+00:00"
+    },
+    {
+      "instrument": "SoLEXS",
+      "date": "20260110",
+      "filename": "AL1_SLX_L1_20260110_v1.0.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/solexs/level1/2026/01/N00_0000/AL1_SLX_L1_20260110_v1.0.zip",
+      "size_bytes": 3267640,
+      "expected_sha256": "",
+      "sha256": "de6a69907a1562ed33073fb1db43e97f65b74a13c3605a16d69ad6b31fa782c6",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:37:00.873730+00:00"
+    },
+    {
+      "instrument": "SoLEXS",
+      "date": "20260111",
+      "filename": "AL1_SLX_L1_20260111_v1.0.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/solexs/level1/2026/01/N00_0000/AL1_SLX_L1_20260111_v1.0.zip",
+      "size_bytes": 4061635,
+      "expected_sha256": "",
+      "sha256": "cd56368d6fc3123e3e95f6ff64d275fd1bbdd0c5d4d487faf99b207ea632847f",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:37:00.929048+00:00"
+    },
+    {
+      "instrument": "SoLEXS",
+      "date": "20260112",
+      "filename": "AL1_SLX_L1_20260112_v1.0.zip",
+      "source_url": "",
+      "relative_path": "downloaders/pradan1.issdc.gov.in/al1/protected/downloadData/solexs/level1/2026/01/N00_0000/AL1_SLX_L1_20260112_v1.0.zip",
+      "size_bytes": 5490761,
+      "expected_sha256": "",
+      "sha256": "f9bb8c77789bd6751106fa974ac7d8b79fcd78c4930f3c8f1b8b35b0c782408e",
+      "status": "local_verified",
+      "error": "",
+      "updated_utc": "2026-11-24T12:37:00.999142+00:00"
+    }
+  ]
+}

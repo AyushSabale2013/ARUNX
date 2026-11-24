@@ -1,0 +1,419 @@
+{
+  "run_id": "smoke_20260110_12_retry",
+  "generated_utc": "2026-11-24T12:38:20.761703+00:00",
+  "status": "PASS",
+  "date_range_requested": {
+    "start": "2026-01-10",
+    "end": "2026-01-12"
+  },
+  "archive_count_by_status": {
+    "local_verified": 10
+  },
+  "extraction_file_count": 0,
+  "extraction_count_by_status": {},
+  "merged_rows": 4320,
+  "merged_dates": 3,
+  "labelled_rows": 4320,
+  "forecast_labelled_rows": 4320,
+  "feature_count": 592,
+  "row_policy": "both_instruments",
+  "task_split_datasets": [
+    {
+      "task": "classification",
+      "split": "train",
+      "rows": 1439,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-10 23:59:00+00:00",
+      "target_distribution": {
+        "0": 1439
+      },
+      "feature_missing_values": 605
+    },
+    {
+      "task": "classification",
+      "split": "validation",
+      "rows": 1440,
+      "start_utc": "2026-01-11 00:00:00+00:00",
+      "end_utc": "2026-01-11 23:59:00+00:00",
+      "target_distribution": {
+        "0": 1314,
+        "1": 126
+      },
+      "feature_missing_values": 91
+    },
+    {
+      "task": "classification",
+      "split": "test",
+      "rows": 1441,
+      "start_utc": "2026-01-12 00:00:00+00:00",
+      "end_utc": "2026-01-13 00:00:00+00:00",
+      "target_distribution": {
+        "0": 1409,
+        "1": 32
+      },
+      "feature_missing_values": 143
+    },
+    {
+      "task": "nowcasting",
+      "split": "train",
+      "rows": 1439,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-10 23:59:00+00:00",
+      "target_distribution": {
+        "0": 1439
+      },
+      "feature_missing_values": 605
+    },
+    {
+      "task": "nowcasting",
+      "split": "validation",
+      "rows": 1440,
+      "start_utc": "2026-01-11 00:00:00+00:00",
+      "end_utc": "2026-01-11 23:59:00+00:00",
+      "target_distribution": {
+        "0": 1314,
+        "1": 126
+      },
+      "feature_missing_values": 91
+    },
+    {
+      "task": "nowcasting",
+      "split": "test",
+      "rows": 1441,
+      "start_utc": "2026-01-12 00:00:00+00:00",
+      "end_utc": "2026-01-13 00:00:00+00:00",
+      "target_distribution": {
+        "0": 1409,
+        "1": 32
+      },
+      "feature_missing_values": 143
+    },
+    {
+      "task": "peak_detection",
+      "split": "train",
+      "rows": 1439,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-10 23:59:00+00:00",
+      "target_distribution": {
+        "0": 1439
+      },
+      "feature_missing_values": 605
+    },
+    {
+      "task": "peak_detection",
+      "split": "validation",
+      "rows": 1440,
+      "start_utc": "2026-01-11 00:00:00+00:00",
+      "end_utc": "2026-01-11 23:59:00+00:00",
+      "target_distribution": {
+        "0": 1439,
+        "1": 1
+      },
+      "feature_missing_values": 91
+    },
+    {
+      "task": "peak_detection",
+      "split": "test",
+      "rows": 1441,
+      "start_utc": "2026-01-12 00:00:00+00:00",
+      "end_utc": "2026-01-13 00:00:00+00:00",
+      "target_distribution": {
+        "0": 1441
+      },
+      "feature_missing_values": 143
+    },
+    {
+      "task": "forecast_15m",
+      "split": "train",
+      "rows": 1424,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-10 23:44:00+00:00",
+      "target_distribution": {
+        "0": 1424
+      },
+      "feature_missing_values": 605
+    },
+    {
+      "task": "forecast_15m",
+      "split": "validation",
+      "rows": 1314,
+      "start_utc": "2026-01-11 00:00:00+00:00",
+      "end_utc": "2026-01-11 21:53:00+00:00",
+      "target_distribution": {
+        "0": 1299,
+        "1": 15
+      },
+      "feature_missing_values": 91
+    },
+    {
+      "task": "forecast_15m",
+      "split": "test",
+      "rows": 1394,
+      "start_utc": "2026-01-12 00:32:00+00:00",
+      "end_utc": "2026-01-12 23:45:00+00:00",
+      "target_distribution": {
+        "0": 1394
+      },
+      "feature_missing_values": 78
+    },
+    {
+      "task": "forecast_30m",
+      "split": "train",
+      "rows": 1409,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-10 23:29:00+00:00",
+      "target_distribution": {
+        "0": 1409
+      },
+      "feature_missing_values": 605
+    },
+    {
+      "task": "forecast_30m",
+      "split": "validation",
+      "rows": 1314,
+      "start_utc": "2026-01-11 00:00:00+00:00",
+      "end_utc": "2026-01-11 21:53:00+00:00",
+      "target_distribution": {
+        "0": 1284,
+        "1": 30
+      },
+      "feature_missing_values": 91
+    },
+    {
+      "task": "forecast_30m",
+      "split": "test",
+      "rows": 1379,
+      "start_utc": "2026-01-12 00:32:00+00:00",
+      "end_utc": "2026-01-12 23:30:00+00:00",
+      "target_distribution": {
+        "0": 1379
+      },
+      "feature_missing_values": 78
+    },
+    {
+      "task": "forecast_60m",
+      "split": "train",
+      "rows": 1379,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-10 22:59:00+00:00",
+      "target_distribution": {
+        "0": 1379
+      },
+      "feature_missing_values": 605
+    },
+    {
+      "task": "forecast_60m",
+      "split": "validation",
+      "rows": 1314,
+      "start_utc": "2026-01-11 00:00:00+00:00",
+      "end_utc": "2026-01-11 21:53:00+00:00",
+      "target_distribution": {
+        "0": 1254,
+        "1": 60
+      },
+      "feature_missing_values": 91
+    },
+    {
+      "task": "forecast_60m",
+      "split": "test",
+      "rows": 1349,
+      "start_utc": "2026-01-12 00:32:00+00:00",
+      "end_utc": "2026-01-12 23:00:00+00:00",
+      "target_distribution": {
+        "0": 1349
+      },
+      "feature_missing_values": 78
+    }
+  ],
+  "task_dataset_files": [
+    {
+      "path": "ml_ready\\classification_train.parquet",
+      "rows": 1439,
+      "sha256": "6c766d103829bd0fdc90898a0021db11065db8a54a92fd6f4c57c1957f440778"
+    },
+    {
+      "path": "ml_ready\\classification_validation.parquet",
+      "rows": 1440,
+      "sha256": "54cf566452a19ca851fd4256ecb3910663ab5ed63e21e099fa52027ede5c15d6"
+    },
+    {
+      "path": "ml_ready\\classification_test.parquet",
+      "rows": 1441,
+      "sha256": "8f3d1eef6ab901f9e1047aecda81c6a095f89650c79511d15674fc0807649623"
+    },
+    {
+      "path": "ml_ready\\nowcasting_train.parquet",
+      "rows": 1439,
+      "sha256": "6c766d103829bd0fdc90898a0021db11065db8a54a92fd6f4c57c1957f440778"
+    },
+    {
+      "path": "ml_ready\\nowcasting_validation.parquet",
+      "rows": 1440,
+      "sha256": "54cf566452a19ca851fd4256ecb3910663ab5ed63e21e099fa52027ede5c15d6"
+    },
+    {
+      "path": "ml_ready\\nowcasting_test.parquet",
+      "rows": 1441,
+      "sha256": "8f3d1eef6ab901f9e1047aecda81c6a095f89650c79511d15674fc0807649623"
+    },
+    {
+      "path": "ml_ready\\peak_detection_train.parquet",
+      "rows": 1439,
+      "sha256": "6c766d103829bd0fdc90898a0021db11065db8a54a92fd6f4c57c1957f440778"
+    },
+    {
+      "path": "ml_ready\\peak_detection_validation.parquet",
+      "rows": 1440,
+      "sha256": "df1b999a4766aa754c45ad0462a6d373dec6f07ead65ec9d39fd46ff8798c899"
+    },
+    {
+      "path": "ml_ready\\peak_detection_test.parquet",
+      "rows": 1441,
+      "sha256": "2c4e915a6cabbee1341ff752b18e0e2fd306c6183540bb7527e458d42bf6981d"
+    },
+    {
+      "path": "ml_ready\\forecast_15m_train.parquet",
+      "rows": 1424,
+      "sha256": "3d092364c7816410a93456547a32cdab74e43b2f664ccfa90fb19bee8833edb8"
+    },
+    {
+      "path": "ml_ready\\forecast_15m_validation.parquet",
+      "rows": 1314,
+      "sha256": "3c7538b950f32b2373aa5d6ea22c68e96a7f93888e29094a06c51d86e12ca401"
+    },
+    {
+      "path": "ml_ready\\forecast_15m_test.parquet",
+      "rows": 1394,
+      "sha256": "4e7d6ac1fa93ecc822dadcba634f917131b0d380688e41ce561a96907c329201"
+    },
+    {
+      "path": "ml_ready\\forecast_30m_train.parquet",
+      "rows": 1409,
+      "sha256": "10a21ed666de3ef5250a396783344ccf89ccce9060cb12748462b8b9f469480f"
+    },
+    {
+      "path": "ml_ready\\forecast_30m_validation.parquet",
+      "rows": 1314,
+      "sha256": "738dfcf2f346aae1412b33a1768ca3407e2fe060b992d77828ca8c747fc43e53"
+    },
+    {
+      "path": "ml_ready\\forecast_30m_test.parquet",
+      "rows": 1379,
+      "sha256": "2947e41296807450e90d4e10a0dc681a47cef4e29153697812e1723e3eb7f4c5"
+    },
+    {
+      "path": "ml_ready\\forecast_60m_train.parquet",
+      "rows": 1379,
+      "sha256": "32b3d5d8f1c0e012975e7a68b70d31fb1fdfed31b63239570587d55afe24fed7"
+    },
+    {
+      "path": "ml_ready\\forecast_60m_validation.parquet",
+      "rows": 1314,
+      "sha256": "b27b5f4498571446e45d3aadd69b30a316d521f73edc1a64ed3677451c938d07"
+    },
+    {
+      "path": "ml_ready\\forecast_60m_test.parquet",
+      "rows": 1349,
+      "sha256": "10dd28147cdb5bb2eaf81167ff87f6faa406f8f7cfd5a4c7554839e7e31687d0"
+    }
+  ],
+  "master_table_checks": [
+    {
+      "name": "merged",
+      "rows": 4320,
+      "columns": 105,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-13 00:00:00+00:00",
+      "unique_dates": 3,
+      "date_row_counts": {
+        "2026-01-10": 1440,
+        "2026-01-11": 1440,
+        "2026-01-12": 1440
+      },
+      "dates_not_1440_rows": {},
+      "signal_channel_count": 21,
+      "target_distributions": {},
+      "issues": []
+    },
+    {
+      "name": "labeled",
+      "rows": 4320,
+      "columns": 108,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-13 00:00:00+00:00",
+      "unique_dates": 3,
+      "date_row_counts": {
+        "2026-01-10": 1440,
+        "2026-01-11": 1440,
+        "2026-01-12": 1440
+      },
+      "dates_not_1440_rows": {},
+      "signal_channel_count": 21,
+      "target_distributions": {
+        "flare_active": {
+          "0": 4162,
+          "1": 158
+        },
+        "flare_class": {
+          "0": 4162,
+          "1": 158
+        },
+        "flare_peak": {
+          "0": 4319,
+          "1": 1
+        }
+      },
+      "issues": []
+    },
+    {
+      "name": "forecast_labeled",
+      "rows": 4320,
+      "columns": 111,
+      "start_utc": "2026-01-10 00:01:00+00:00",
+      "end_utc": "2026-01-13 00:00:00+00:00",
+      "unique_dates": 3,
+      "date_row_counts": {
+        "2026-01-10": 1440,
+        "2026-01-11": 1440,
+        "2026-01-12": 1440
+      },
+      "dates_not_1440_rows": {},
+      "signal_channel_count": 21,
+      "target_distributions": {
+        "flare_active": {
+          "0": 4162,
+          "1": 158
+        },
+        "flare_class": {
+          "0": 4162,
+          "1": 158
+        },
+        "flare_peak": {
+          "0": 4319,
+          "1": 1
+        },
+        "flare_15m": {
+          "-1": 173,
+          "0": 4132,
+          "1": 15
+        },
+        "flare_30m": {
+          "-1": 188,
+          "0": 4102,
+          "1": 30
+        },
+        "flare_60m": {
+          "-1": 218,
+          "0": 4042,
+          "1": 60
+        }
+      },
+      "issues": []
+    }
+  ],
+  "notes": [
+    "NaN feature values are preserved and the training scripts fit imputation/scaling on the training split only.",
+    "Hard-to-soft ratio is not computed from uncalibrated count/count-rate columns; response/units must be reconciled first.",
+    "This run uses M/X targets and 15/30/60-minute horizons defined by the current code, not the alternative 4-state and 1-24-hour proposal in attached documents."
+  ]
+}

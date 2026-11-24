@@ -1,5 +1,6 @@
 
 import re
+import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -14,6 +15,7 @@ GOES_FILE = Path("goes/goes_xray_event_list_2026.txt")
 OUTPUT_DIR = Path("output")
 PARSED_OUTPUT = OUTPUT_DIR / "goes_events_parsed.csv"
 REVIEW_OUTPUT = OUTPUT_DIR / "goes_events_manual_review.csv"
+UNMATCHED_OUTPUT = OUTPUT_DIR / "goes_unmatched_lines.csv"
 
 TIME_FORMAT = "%d-%b-%Y %H:%M"
 
@@ -91,6 +93,17 @@ def parse_event(date_str, start_str, peak_str, end_str):
 
 def main():
 
+    global GOES_FILE, OUTPUT_DIR, PARSED_OUTPUT, REVIEW_OUTPUT, UNMATCHED_OUTPUT
+    parser = argparse.ArgumentParser(description="Parse the GOES flare event catalogue.")
+    parser.add_argument("--input", type=Path, default=GOES_FILE)
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
+    args = parser.parse_args()
+    GOES_FILE = args.input if args.input.is_absolute() else Path(__file__).resolve().parents[2] / args.input
+    OUTPUT_DIR = args.output_dir if args.output_dir.is_absolute() else Path(__file__).resolve().parents[2] / args.output_dir
+    PARSED_OUTPUT = OUTPUT_DIR / "goes_events_parsed.csv"
+    REVIEW_OUTPUT = OUTPUT_DIR / "goes_events_manual_review.csv"
+    UNMATCHED_OUTPUT = OUTPUT_DIR / "goes_unmatched_lines.csv"
+
     if not GOES_FILE.exists():
         raise FileNotFoundError(
             f"GOES catalogue not found: {GOES_FILE}"
@@ -100,9 +113,9 @@ def main():
 
     valid_events = []
     review_events = []
+    unmatched_lines = []
 
     total_parsed = 0
-    unmatched_lines = 0
 
     with GOES_FILE.open("r", encoding="utf-8") as file:
 
@@ -111,6 +124,8 @@ def main():
             match = PATTERN.match(line)
 
             if not match:
+                if re.match(r"^\s*\d{1,2}-[A-Za-z]{3}-20\d{2}\b", line):
+                    unmatched_lines.append({"line": line_number, "original": line.rstrip(), "reason": "date-like record did not match expected GOES row format"})
                 continue
 
             total_parsed += 1
@@ -172,14 +187,17 @@ def main():
     # ========================================================
 
     review_df = pd.DataFrame(review_events)
+    unmatched_df = pd.DataFrame(unmatched_lines, columns=["line", "original", "reason"])
 
     # ========================================================
     # SAVE OUTPUTS
     # ========================================================
 
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     df.to_csv(PARSED_OUTPUT, index=False)
 
     review_df.to_csv(REVIEW_OUTPUT, index=False)
+    unmatched_df.to_csv(UNMATCHED_OUTPUT, index=False)
 
     # ========================================================
     # SUMMARY
@@ -190,6 +208,7 @@ def main():
     print(f"Total valid-format records: {total_parsed}")
     print(f"Successfully parsed:        {len(df)}")
     print(f"Manual review required:     {len(review_df)}")
+    print(f"Unmatched event-like lines:  {len(unmatched_df)}")
 
     print("\nClass distribution:")
 
@@ -199,6 +218,7 @@ def main():
     print("\nOutput files:")
     print(f"Parsed events: {PARSED_OUTPUT}")
     print(f"Manual review: {REVIEW_OUTPUT}")
+    print(f"Unmatched rows: {UNMATCHED_OUTPUT}")
 
     if not review_df.empty:
 

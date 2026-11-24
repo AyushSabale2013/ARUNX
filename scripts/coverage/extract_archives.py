@@ -1,6 +1,7 @@
 
 from pathlib import Path, PurePosixPath
 from zipfile import ZipFile
+import argparse
 import csv
 import re
 import shutil
@@ -70,6 +71,21 @@ def save_report(rows, filename):
         writer.writerows(rows)
 
 def main():
+    global START_DATE, END_DATE, DRY_RUN, REPORT_DIR
+    parser = argparse.ArgumentParser(description="Safely extract selected FITS products from PRADAN archives.")
+    parser.add_argument("--start-date", default=START_DATE, help="inclusive YYYYMMDD")
+    parser.add_argument("--end-date", default=END_DATE, help="inclusive YYYYMMDD")
+    parser.add_argument("--report-dir", type=Path, default=REPORT_DIR)
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+    if not re.fullmatch(r"20\d{6}", args.start_date) or not re.fullmatch(r"20\d{6}", args.end_date):
+        parser.error("dates must use YYYYMMDD")
+    if args.start_date > args.end_date:
+        parser.error("start date must not be after end date")
+    START_DATE, END_DATE = args.start_date, args.end_date
+    REPORT_DIR = args.report_dir if args.report_dir.is_absolute() else BASE / args.report_dir
+    DRY_RUN = args.dry_run
+
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
     sources = [

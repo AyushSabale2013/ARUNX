@@ -1,0 +1,139 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{fancyhdr}
+
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black}
+\setlist[itemize]{noitemsep,topsep=3pt}
+\setlist[enumerate]{topsep=3pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ARUN-X}
+\rhead{Preprocessing and readiness report}
+\cfoot{\thepage}
+
+\title{\textbf{ARUN-X Solar Flare Dataset}\\[3pt]
+\large Preprocessing from Data Acquisition to Model Readiness}
+\author{Project pipeline documentation}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report describes the ARUN-X data workflow for preparing HEL1OS hard X-ray and SoLEXS soft X-ray measurements with GOES flare-event labels. It follows the data from acquisition and date selection through time alignment, quality handling, label creation, and the planned training/evaluation stage. The repository currently contains a one-day processing example (6 October 2026), coverage-analysis utilities and reports, and label-generation scripts. It does not yet contain a completed multi-day training corpus, finalized chronological splits, or measured model results. Implemented behavior and planned work are distinguished throughout.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Project objective and data sources}
+
+ARUN-X aims to build a reliable time-series dataset for detecting active M/X-class solar flares and forecasting their starts. Three sources are involved:
+\begin{itemize}
+  \item \textbf{HEL1OS}: hard X-ray light-curve channels in FITS files, with detector good-time intervals (GTIs).
+  \item \textbf{SoLEXS}: soft X-ray SDD2 light-curve data and a corresponding GTI.
+  \item \textbf{GOES}: an event catalogue containing flare start, peak, end, and class information. It provides labels rather than instrument input features.
+\end{itemize}
+
+The intended processing flow is:
+\begin{center}
+Raw instrument files $+$ GOES event catalogue $\longrightarrow$ coverage/date selection $\longrightarrow$ UTC quality-filtered minute table $\longrightarrow$ labels $\longrightarrow$ chronological splits $\longrightarrow$ model training and evaluation.
+\end{center}
+
+\section{Acquisition and date selection}
+
+\subsection{What is present}
+The repository contains downloaded HEL1OS and SoLEXS source data, a GOES event-list file, and scripts/reports for auditing observation dates and overlap. Coverage tools inspect HEL1OS segments/GTIs, SoLEXS dates, shared coverage, and GOES event dates. The final-date report combines instrument coverage and event information. The project plan records a proposed February--July 2026 period and illustrative month-based splits, subject to confirming availability from both instruments.
+
+\subsection{What is missing at acquisition}
+The listed repository files do not include a maintained, end-to-end bulk-download script for both missions. The one-day source data were obtained, but bulk acquisition is marked as not started in \texttt{z\_plan.md}. A reproducible acquisition step should record the portal/query, product version, requested dates, successful/failed downloads, checksums or file sizes, and extraction status. Date selection must be based on actual common coverage and event counts, rather than the proposed range alone.
+
+\section{GOES event parsing}
+
+The script \texttt{scripts/pipeline/parse\_goes.py} reads the GOES event-list text using a regular expression and writes \texttt{output/goes\_events\_parsed.csv}. It parses date, start, peak, end, and class (for example, M or X plus intensity), converts event times to UTC, and derives \texttt{class\_type} and numeric \texttt{intensity} fields. This table is the source of active-flare and forecast targets.
+
+The parser currently assumes a specific text layout and does not itself document or validate catalogue version/provenance, malformed rows, duplicate events, or time-zone conventions. These checks should be added before scaling to the final dataset.
+
+\section{Instrument preprocessing and merging}
+
+The current one-day implementation is in \texttt{scripts/pipeline/merge\_lightcurves.py}. Its configured demonstration date is 2026-10-06.
+
+\subsection{HEL1OS}
+The script finds date-matching \texttt{lightcurve\_*.fits} files. For each detector it locates the corresponding GTI FITS file, reads MJD timestamps and \texttt{CTR} count rates from the light-curve HDUs, and converts MJD to timezone-aware UTC timestamps. Measurements are retained only when finite and within a GTI; otherwise the signal is set to NaN. Detector/channel series are aligned by timestamp. Exact duplicate timestamps within a channel trigger an error.
+
+\subsection{SoLEXS}
+The script reads the SDD2 \texttt{RATE} extension, using \texttt{TIME} as Unix seconds and \texttt{COUNTS} as the signal, then converts timestamps to UTC. It reads the matching GTI extension and retains finite counts only inside valid intervals. The present implementation expects exactly one light-curve file and one GTI file under the source tree, which is a one-day assumption that must be replaced for multi-day runs.
+
+\subsection{Resampling and alignment}
+The two instrument frames are outer-joined on timestamp. For each numeric signal, valid samples are aggregated as a one-minute mean. A minute's GTI flag is true if at least one sample in that minute falls in a valid GTI. The result is reindexed to a complete UTC day with 1,440 minute timestamps. Signal values missing after aggregation remain NaN; missing flags are true and absent GTI flags false. Values outside GTIs are explicitly set to NaN.
+
+The merged table is written as \texttt{output/merged\_20261006.parquet}. The script checks row count, unique timestamps, unique columns, the expected 21 signal columns, presence of missing/GTI flags, and consistency between flags and values. These validations apply to the configured one-day run; multi-day boundary behavior is not yet established.
+
+\section{Label generation}
+
+\subsection{Active event, class, and peak labels}
+\texttt{scripts/pipeline/label\_flares.py} joins the merged observations to parsed GOES M/X events. It creates:
+\begin{itemize}
+  \item \texttt{flare\_active}: 1 for timestamps from event start through event end, inclusive; otherwise 0.
+  \item \texttt{flare\_class}: 0 for no active M/X event, 1 for M, and 2 for X. For overlapping event intervals, the larger class value is retained.
+  \item \texttt{flare\_peak}: 1 on the minute obtained by flooring the event peak timestamp to a minute; otherwise 0.
+\end{itemize}
+The output is \texttt{output/labeled\_20261006.parquet}.
+
+\subsection{Forecast targets}
+\texttt{scripts/pipeline/create\_forecast\_labels.py} creates \texttt{flare\_15m}, \texttt{flare\_30m}, and \texttt{flare\_60m}. A row is positive if an M/X event starts strictly after its timestamp and within the selected future horizon. Rows during an active M/X event are assigned $-1$, as are rows too close to the end of the data to have a complete future window. Other rows are assigned 0. The output is \texttt{output/forecast\_labeled\_20261006.parquet}.
+
+The $-1$ value is an exclusion/unknown sentinel and must not be treated as a negative label during training or scoring. Boundary behavior, overlapping events, rows with missing instrument coverage, and catalogue/event time conventions require an explicit multi-day label audit.
+
+\section{From labeled table to model-ready dataset}
+
+The current Parquet files are intermediate labeled data; a complete model-ready dataset is not yet present. The planned last preprocessing stages are:
+\begin{enumerate}
+  \item Process all selected dates with reproducible per-date inputs and outputs, then concatenate without duplicate or missing UTC minutes at boundaries.
+  \item Apply documented quality rules, retaining GTI and missingness indicators and identifying dates/intervals with insufficient instrument coverage. Do not silently replace missing measurements with zero.
+  \item Generate and validate all task labels and agreed forecast horizons across the entire date range. SEP-contamination flags should only be included when a reliable source is available.
+  \item Construct features from the prediction timestamp and its past only. Candidate features include current signal, changes, and trailing summaries over fixed windows. Exclude GOES-derived labels, future measurements, and target columns from model inputs.
+  \item Split by chronology into train, validation, and test dates. Fit imputation, transforms, scaling, feature selection, and any sampling on the training set only; reuse fitted preprocessing on later splits.
+  \item Persist a schema and manifest describing dates, source products, quality decisions, target definitions, split boundaries, and preprocessing configuration.
+\end{enumerate}
+
+\section{Training and evaluation: planned, not completed}
+
+The recommended first serious model is a class-weighted gradient-boosted tree (CatBoost or LightGBM) on past-only engineered features, compared with a climatology/no-skill baseline and logistic regression. A temporal CNN or CNN-LSTM is a later experiment once substantially more independent events have been collected. This is a recommendation, not a result: the repository has no finalized multi-day splits or trained-model scores.
+
+Evaluation should use untouched later dates, preserve natural class prevalence in validation/test, and report event counts. Accuracy alone is not useful for a rare-event problem. Report precision-recall AUC, threshold-specific precision and recall, event-level recall, false alarms per day, and lead time. Threshold selection and any hyperparameter tuning must use validation data, not the test set. Any X-class-specific claim must account for the small number of X events noted in the project plan.
+
+\section{Missing work and readiness checklist}
+
+\begin{longtable}{p{0.26\textwidth}p{0.22\textwidth}p{0.44\textwidth}}
+\toprule
+\textbf{Area} & \textbf{Status} & \textbf{Needed before final training} \\
+\midrule
+Bulk acquisition & Not complete & Reproducible HEL1OS/SoLEXS downloader or logged acquisition process, provenance, integrity checks, and a verified list of successful dates. \\
+Date selection & In progress & Confirm common instrument coverage for the chosen period and recount events on eligible dates; finalize split boundaries based on actual data. \\
+Multi-day merge & Missing & Generalize the configured one-day date and single-SoLEXS-file assumptions; handle daily boundaries and reruns deterministically. \\
+Quality policy & Partial & Define minimum coverage, missing-data handling, bad intervals, instrument anomalies, and any reliable SEP-contamination flags. \\
+Label audit & Partial & Validate time conventions, inclusive interval semantics, peak rounding, overlaps, event-to-row matching, and the $-1$ exclusion behavior at scale. \\
+Feature pipeline & Missing & Implement reproducible, past-only features and training-fitted transforms; persist schema and transform state. \\
+Chronological splits & Missing & Create train/validation/test datasets by date and report valid coverage and independent event counts for each. \\
+Model training & Not started & Train baselines and candidate models using training data only; tune on validation and retain the test set for final evaluation. \\
+Evaluation & Not started & Produce measured rare-event and event-level metrics with thresholds, lead times, false alarms, and date-level context. \\
+Application integration & Not started & Load actual data/model, persist preprocessing with the model, and connect predictions to the application only after pipeline validation. \\
+\bottomrule
+\end{longtable}
+
+\section{Conclusion}
+
+ARUN-X already demonstrates the central one-day transformation: parse GOES events, read HEL1OS and SoLEXS light curves, enforce GTI and finite-value constraints, align observations on a one-minute UTC grid, and generate active/class/peak plus forecast labels. The next critical deliverable is a verified multi-day dataset with documented quality rules and chronological splits. Until that exists and is evaluated on held-out dates, model selection remains a recommendation rather than an empirical conclusion.
+
+\end{document}

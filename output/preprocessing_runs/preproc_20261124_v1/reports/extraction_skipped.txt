@@ -1,0 +1,1 @@
+Extraction skipped by request; existing raw FITS were required and checked during merge.

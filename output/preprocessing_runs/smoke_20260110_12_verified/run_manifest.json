@@ -1,0 +1,19 @@
+{
+  "run_id": "smoke_20260110_12_verified",
+  "created_utc": "2026-11-24T12:39:38.262226+00:00",
+  "config_sha256": "6e50a6bde14d3a7f831b44940135b07f9c6bbfb71eeec543f3090a13a7450309",
+  "source_goes_sha256": "4bd5e105eb158d64f268ef08977ce784ee6fcd07c217d00ba5dbda731bedce76",
+  "run_directory": "output/preprocessing_runs/smoke_20260110_12_verified",
+  "stages": [
+    "local archive inventory and ZIP validation",
+    "selective extraction",
+    "GOES parsing",
+    "multi-day UTC merge",
+    "GOES interval labels",
+    "segment-aware forecast targets",
+    "past-only features",
+    "chronological task splits",
+    "output validation"
+  ],
+  "validation_report": "output/preprocessing_runs/smoke_20260110_12_verified/reports/preprocessing_report.json"
+}

@@ -65,6 +65,13 @@ if _requested_threads is not None:
         os.environ[_var] = str(_n)
 
 from pathlib import Path
+<<<<<<< HEAD
+=======
+import json
+import argparse
+import os
+import warnings
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -89,8 +96,50 @@ from sklearn.exceptions import ConvergenceWarning  # noqa: E402
 from sklearn.linear_model import LogisticRegression  # noqa: E402
 from sklearn.metrics import average_precision_score  # noqa: E402
 
+<<<<<<< HEAD
 FAMILY = "baselines"
 ALL_MODELS = (
+=======
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    average_precision_score,
+    roc_auc_score,
+    confusion_matrix,
+    precision_recall_curve,
+    classification_report,
+)
+
+from lightgbm import LGBMClassifier
+
+warnings.filterwarnings("ignore")
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+DATA_DIR = Path(os.environ.get("ARUNX_ML_DATA_DIR", "output/ml_ready_minute_end_v2"))
+
+MODEL_DIR = Path("models/baselines")
+
+RESULT_DIR = Path("output/model_results/baselines")
+
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+RESULT_DIR.mkdir(parents=True, exist_ok=True)
+
+TASKS = {
+    "15m": "forecast_15m",
+    "30m": "forecast_30m",
+    "60m": "forecast_60m",
+}
+
+RANDOM_STATE = 42
+
+# Models to compare
+MODEL_NAMES = [
+>>>>>>> a3cfcab (Implemented full data preprocessing)
     "logistic_regression",
     "random_forest",
     "extra_trees",
@@ -639,11 +688,18 @@ def train_one_model(name, horizon, args, d, features, split_info, model_dir, res
 # ============================================================
 
 def main():
+<<<<<<< HEAD
     args = parse_args()
     validate_args(args)
     if not 3 <= args.threads <= 4:
         print(f"NOTE: using {args.threads} thread(s); 3-4 is recommended for an 8 GB machine.")
     tu.set_seed(args.seed)
+=======
+    global DATA_DIR
+    parser = argparse.ArgumentParser(description="Train classical baseline models on prepared task split Parquet files.")
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
+    DATA_DIR = parser.parse_args().data_dir
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
     model_dir = Path(args.models_root) / FAMILY
     result_dir = Path(args.results_root) / FAMILY

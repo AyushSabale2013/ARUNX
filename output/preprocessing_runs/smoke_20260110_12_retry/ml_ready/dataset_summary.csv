@@ -1,0 +1,19 @@
+task,split,rows,target_distribution,file
+classification,train,1439,{0: 1439},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\classification_train.parquet
+classification,validation,1440,"{0: 1314, 1: 126}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\classification_validation.parquet
+classification,test,1441,"{0: 1409, 1: 32}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\classification_test.parquet
+nowcasting,train,1439,{0: 1439},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\nowcasting_train.parquet
+nowcasting,validation,1440,"{0: 1314, 1: 126}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\nowcasting_validation.parquet
+nowcasting,test,1441,"{0: 1409, 1: 32}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\nowcasting_test.parquet
+peak_detection,train,1439,{0: 1439},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\peak_detection_train.parquet
+peak_detection,validation,1440,"{0: 1439, 1: 1}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\peak_detection_validation.parquet
+peak_detection,test,1441,{0: 1441},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\peak_detection_test.parquet
+forecast_15m,train,1424,{0: 1424},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_15m_train.parquet
+forecast_15m,validation,1314,"{0: 1299, 1: 15}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_15m_validation.parquet
+forecast_15m,test,1394,{0: 1394},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_15m_test.parquet
+forecast_30m,train,1409,{0: 1409},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_30m_train.parquet
+forecast_30m,validation,1314,"{0: 1284, 1: 30}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_30m_validation.parquet
+forecast_30m,test,1379,{0: 1379},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_30m_test.parquet
+forecast_60m,train,1379,{0: 1379},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_60m_train.parquet
+forecast_60m,validation,1314,"{0: 1254, 1: 60}",D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_60m_validation.parquet
+forecast_60m,test,1349,{0: 1349},D:\ARUN-X\ARUNX\output\preprocessing_runs\smoke_20260110_12_retry\ml_ready\forecast_60m_test.parquet

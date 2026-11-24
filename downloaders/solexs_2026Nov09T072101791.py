@@ -22,6 +22,7 @@ Caution:
   the server.
 """
 
+import os
 import requests
 import threading
 import time
@@ -46,7 +47,10 @@ url_prefix = "https://pradan1.issdc.gov.in"
 
 # =====================================================
 
-cookie_string = "FGTServer=03DE191863F4388C06A7AAAF7E0136FBD15060DF21FA637D82A675307CD5BF28BF8658CAFD950178CA994D;primefaces.download=null;FGTServer=03DE191863F4388C06A7AAAF7E0136FBD15060DF21FA637D82A675307CD5BF28BF8658CAFD950178C9994D;JSESSIONID=f2c40d26728a6627f9186ca5b9fe;JSESSIONID=c4fb247f388448a8435c5bd19a97;OAuth_Token_Request_State=cbbe074f-395a-4531-9ce3-12acaa76bf30;" 
+cookie_string = os.environ.get("PRADAN_COOKIE", "").strip()
+
+if not cookie_string:
+    raise RuntimeError("Set PRADAN_COOKIE to the authenticated PRADAN Cookie header before running this generated downloader.")
 
 headers = {
 "Cookie": cookie_string

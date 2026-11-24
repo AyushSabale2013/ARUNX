@@ -97,8 +97,9 @@ def find_gti_hdu(hdul, start_name, stop_name):
     )
 
 
-def checkpoint_path(date):
-    return CHECKPOINT_DIR / f"{date}.parquet"
+def checkpoint_path(date, directory=None):
+    checkpoint_dir = Path(directory) if directory is not None else CHECKPOINT_DIR
+    return checkpoint_dir / f"{date}.parquet"
 
 
 def checkpoint_is_valid(path):
@@ -269,8 +270,8 @@ def read_hel1os_segment(lc_path):
                 mjd, g_starts, g_stops, tol=HEL1OS_GTI_TOL
             )
 
-            counts = np.where(gti_valid, counts, np.nan)
-            errors = np.where(gti_valid, errors, np.nan)
+            counts = np.where(gti_valid & np.isfinite(counts), counts, np.nan)
+            errors = np.where(gti_valid & np.isfinite(errors), errors, np.nan)
 
             channel = f"hel1os_{detector}_band{band_number}"
 
@@ -344,7 +345,7 @@ def read_solexs_day(lc_path):
     counts = counts[finite]
 
     gti_valid = gti_mask(times, g_starts, g_stops, tol=0.0)
-    counts = np.where(gti_valid, counts, np.nan)
+    counts = np.where(gti_valid & np.isfinite(counts), counts, np.nan)
 
     # SoLEXS TIME is seconds since MJDREF=40587 (Unix epoch).
     t_us = np.rint(times * 1e6).astype(np.int64)
@@ -384,7 +385,7 @@ def _minute_index(t_us, day_start_us):
 
 def _mean_by_minute(minute, values):
     """Mean of non-NaN values per minute; NaN where no valid value exists."""
-    valid = ~np.isnan(values)
+    valid = np.isfinite(values)
     m = minute[valid]
 
     n = np.bincount(m, minlength=MINUTES_PER_DAY)
@@ -401,7 +402,7 @@ def _mean_by_minute(minute, values):
 
 def _error_by_minute(minute, errors):
     """sqrt(sum(err^2)) / n over non-NaN errors per minute."""
-    valid = ~np.isnan(errors)
+    valid = np.isfinite(errors)
     m = minute[valid]
     e = errors[valid]
 
@@ -487,7 +488,7 @@ def bin_solexs(t_us, counts, gti, day_start_us):
 # MERGE ONE DATE
 # ============================================================
 
-def merge_one_date(date, hel1os_files, solexs_path):
+def merge_one_date(date, hel1os_files, solexs_paths):
     day_start = pd.Timestamp(
         year=int(date[0:4]),
         month=int(date[4:6]),
@@ -542,7 +543,12 @@ def merge_one_date(date, hel1os_files, solexs_path):
             )
         )
 
-    t_us, counts, gti = read_solexs_day(solexs_path)
+    if isinstance(solexs_paths, (str, Path)):
+        solexs_paths = [Path(solexs_paths)]
+    solexs_parts = [read_solexs_day(path) for path in solexs_paths]
+    t_us = np.concatenate([part[0] for part in solexs_parts])
+    counts = np.concatenate([part[1] for part in solexs_parts])
+    gti = np.concatenate([part[2] for part in solexs_parts])
     columns.update(bin_solexs(t_us, counts, gti, day_start_us))
 
     merged = pd.DataFrame(columns)
@@ -571,14 +577,14 @@ def merge_one_date(date, hel1os_files, solexs_path):
 # WORKER (ONE DATE -> ONE CHECKPOINT)
 # ============================================================
 
-def process_date(date, hel1os_files, solexs_path):
+def process_date(date, hel1os_files, solexs_path, checkpoint_dir=None):
     """Merge one date and write its v2 checkpoint atomically."""
     started = time.perf_counter()
 
     try:
         merged = merge_one_date(date, hel1os_files, solexs_path)
 
-        final_path = checkpoint_path(date)
+        final_path = checkpoint_path(date, checkpoint_dir)
         temp_path = final_path.with_name(final_path.name + ".tmp")
 
         merged.to_parquet(temp_path, index=False)
@@ -688,12 +694,7 @@ def discover():
         if not date:
             continue
 
-        if date in solexs_by_date:
-            raise ValueError(
-                f"Multiple SoLEXS lightcurves found for {date}"
-            )
-
-        solexs_by_date[date] = path
+        solexs_by_date.setdefault(date, []).append(path)
 
     print(f"SoLEXS lightcurve files: {len(solexs_files)}")
     print(f"SoLEXS dates: {len(solexs_by_date)}")
@@ -706,6 +707,7 @@ def discover():
 # ============================================================
 
 def main():
+    global OUTPUT_DIR, CHECKPOINT_DIR, OUTPUT_PATH, SUMMARY_PATH, QUALITY_PATH
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawTextHelpFormatter,
@@ -737,14 +739,33 @@ def main():
         action="store_true",
         help="ignore existing v2 checkpoints and reprocess selected dates",
     )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OUTPUT_DIR,
+        help="directory for checkpoints, merged table, and reports",
+    )
+    parser.add_argument("--start-date", help="first date to include, YYYYMMDD")
+    parser.add_argument("--end-date", help="last date to include, YYYYMMDD")
 
     args = parser.parse_args()
+
+    OUTPUT_DIR = args.output_dir if args.output_dir.is_absolute() else BASE / args.output_dir
+    CHECKPOINT_DIR = OUTPUT_DIR / "checkpoints_minute_end_v2"
+    OUTPUT_PATH = OUTPUT_DIR / "merged_timeseries_minute_end_v2.parquet"
+    SUMMARY_PATH = OUTPUT_DIR / "merge_summary_minute_end_v2.csv"
+    QUALITY_PATH = OUTPUT_DIR / "merge_quality_report_minute_end_v2.csv"
 
     if args.workers < 1:
         raise ValueError("--workers must be at least 1")
 
     if args.limit is not None and args.limit < 1:
         raise ValueError("--limit must be at least 1")
+    for label, value in (("--start-date", args.start_date), ("--end-date", args.end_date)):
+        if value is not None and not re.fullmatch(r"20\d{6}", value):
+            raise ValueError(f"{label} must use YYYYMMDD")
+    if args.start_date and args.end_date and args.start_date > args.end_date:
+        raise ValueError("--start-date must not be after --end-date")
 
     print("=" * 60)
     print("ADITYA-L1 MULTI-DAY MERGING PIPELINE (MINUTE-END V2)")
@@ -764,6 +785,11 @@ def main():
     eligible_dates = sorted(
         set(hel1os_by_date) & set(solexs_by_date)
     )
+
+    if args.start_date:
+        eligible_dates = [date for date in eligible_dates if date >= args.start_date]
+    if args.end_date:
+        eligible_dates = [date for date in eligible_dates if date <= args.end_date]
 
     print(
         f"\nDates available in both instruments: {len(eligible_dates)}"
@@ -872,6 +898,7 @@ def main():
                     date,
                     hel1os_by_date[date],
                     solexs_by_date[date],
+                    CHECKPOINT_DIR,
                 )
 
                 results[result_date] = (status, error)
@@ -887,6 +914,7 @@ def main():
                         date,
                         hel1os_by_date[date],
                         solexs_by_date[date],
+                        CHECKPOINT_DIR,
                     )
                     for date in todo
                 ]
@@ -916,7 +944,7 @@ def main():
         base_row = {
             "date": date,
             "hel1os_segments": len(hel1os_by_date[date]),
-            "solexs_file": solexs_by_date[date].name,
+        "solexs_file": ";".join(path.name for path in solexs_by_date[date]),
         }
 
         path = checkpoint_path(date)

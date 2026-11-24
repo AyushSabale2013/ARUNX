@@ -2,7 +2,15 @@
 """
 ARUN-X: XGBoost flare-onset forecasting at 15 / 30 / 60 minute horizons.
 
+<<<<<<< HEAD
 Location: scripts/ml/train_xgboost_forecasting.py (next to training_utils.py).
+=======
+from pathlib import Path
+import json
+import argparse
+import os
+import warnings
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
 What this script does
 ---------------------
@@ -75,6 +83,7 @@ from xgboost import XGBClassifier  # noqa: E402
 # CONSTANTS
 # ============================================================
 
+<<<<<<< HEAD
 SCRIPT_VERSION = "2.0"
 FAMILY = "forecasting"
 MODEL_NAME = "xgboost"          # key used in the shared metrics tables / prediction file names
@@ -83,6 +92,9 @@ SPLITS = ("train", "validation", "test")
 MINUTES_PER_DAY = 1440.0
 LEAKY_NAME_TOKENS = ("target", "label", "future", "forecast")
 MIN_XGBOOST = (1, 6, 0)         # constructor-level early_stopping_rounds / eval_metric
+=======
+DATA_DIR = Path(os.environ.get("ARUNX_ML_DATA_DIR", "output/ml_ready_minute_end_v2"))
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
 DEFAULT_PARAMS = {
     "n_estimators": 500,
@@ -888,6 +900,7 @@ def run_horizon(horizon: int, args, features: list, audits: dict, paths: dict,
 # MAIN
 # ============================================================
 
+<<<<<<< HEAD
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     if _version_tuple(xgboost.__version__) < MIN_XGBOOST:
@@ -897,6 +910,13 @@ def main(argv=None) -> int:
     horizons = list(dict.fromkeys(args.horizons))
     data_dir = Path(args.data_dir)
     params = hyperparameters_from_args(args)
+=======
+def main():
+    global DATA_DIR
+    parser = argparse.ArgumentParser(description="Train forecasting baselines on prepared horizon split Parquet files.")
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
+    DATA_DIR = parser.parse_args().data_dir
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
     print(f"ARUN-X XGBoost forecasting v{SCRIPT_VERSION} | xgboost {xgboost.__version__} | "
           f"n_jobs={args.n_jobs} (training_utils cap {tu.THREADS}) | seed={args.seed}")

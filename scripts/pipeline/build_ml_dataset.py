@@ -1,39 +1,38 @@
 
 from pathlib import Path
 import json
+import os
 import numpy as np
 import pandas as pd
+
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-SOURCE = Path(
-    "output/forecast_labeled_timeseries_minute_end_v2.parquet"
-)
+SOURCE = Path(os.environ.get("ARUNX_FORECAST_INPUT", "output/forecast_labeled_timeseries_minute_end_v2.parquet"))
 
-OUTPUT = Path(
-    "output/ml_ready_minute_end_v2"
-)
+OUTPUT = Path(os.environ.get("ARUNX_ML_OUTPUT", "output/ml_ready_minute_end_v2"))
 
-OUTPUT.mkdir(parents=True, exist_ok=True)
-
+HORIZONS = [int(value) for value in os.environ.get("ARUNX_HORIZONS_MINUTES", "15,30,60").split(",") if value.strip()]
 TARGETS = {
     "classification": ("flare_class", None),
     "nowcasting": ("flare_active", None),
     "peak_detection": ("flare_peak", None),
-    "forecast_15m": ("flare_15m", 15),
-    "forecast_30m": ("flare_30m", 30),
-    "forecast_60m": ("flare_60m", 60),
+    **{f"forecast_{horizon}m": (f"flare_{horizon}m", horizon) for horizon in HORIZONS},
 }
 
-ROLLING_WINDOWS = [5, 15, 30, 60]
-DIFF_LAGS = [1, 5, 15]
+OUTPUT.mkdir(parents=True, exist_ok=True)
 
-TRAIN_END = pd.Timestamp("2026-06-01", tz="UTC")
-VAL_END = pd.Timestamp("2026-07-01", tz="UTC")
+ROLLING_WINDOWS = [int(x) for x in os.environ.get("ARUNX_ROLLING_WINDOWS", "5,15,30,60").split(",") if x.strip()]
+DIFF_LAGS = [int(x) for x in os.environ.get("ARUNX_DIFF_LAGS", "1,5,15").split(",") if x.strip()]
 
-EXPECTED_FEATURE_COUNT = 424
+TRAIN_END = pd.Timestamp(os.environ.get("ARUNX_TRAIN_END", "2026-06-01T00:00:00Z"))
+VAL_END = pd.Timestamp(os.environ.get("ARUNX_VAL_END", "2026-07-01T00:00:00Z"))
+ROW_POLICY = os.environ.get("ARUNX_ROW_POLICY", "either_instrument").strip().lower()
+
+if ROW_POLICY not in {"either_instrument", "both_instruments"}:
+    raise ValueError("ARUNX_ROW_POLICY must be either_instrument or both_instruments")
 
 # ============================================================
 # LOAD DATA
@@ -167,7 +166,7 @@ has_solexs = df[
     "solexs_sdd2_counts"
 ].notna()
 
-usable = has_hel | has_solexs
+usable = has_hel | has_solexs if ROW_POLICY == "either_instrument" else has_hel & has_solexs
 
 print(
     "Rows with usable sensor data:",
@@ -323,6 +322,13 @@ for i, col in enumerate(signal_cols, start=1):
             )
         )
 
+        X[f"{col}_roll{window}_min"] = grouped.transform(
+            lambda s: s.rolling(window=window, min_periods=1).min()
+        )
+        X[f"{col}_roll{window}_max"] = grouped.transform(
+            lambda s: s.rolling(window=window, min_periods=1).max()
+        )
+
     # Past-only differences
     for lag in DIFF_LAGS:
 
@@ -381,12 +387,8 @@ feature_columns = X.columns.tolist()
 print("Feature matrix:", X.shape)
 print("Feature count:", len(feature_columns))
 
-if len(feature_columns) != EXPECTED_FEATURE_COUNT:
-    raise ValueError(
-        f"Expected {EXPECTED_FEATURE_COUNT} features, "
-        f"but generated {len(feature_columns)}. "
-        "Check the signal channel names and metadata."
-    )
+if not feature_columns:
+    raise ValueError("No features were generated")
 
 # ============================================================
 # CHRONOLOGICAL SPLITS
@@ -395,15 +397,19 @@ if len(feature_columns) != EXPECTED_FEATURE_COUNT:
 print("\nCreating chronological splits...")
 
 timestamps = df["timestamp"]
+# Each row is timestamped at the right edge of its represented minute.
+# Split by the represented interval's UTC date so a midnight end-of-day bin
+# stays with the date it measures.
+sample_dates = timestamps - pd.Timedelta(minutes=1)
 
-train_mask = timestamps < TRAIN_END
+train_mask = sample_dates < TRAIN_END
 
 val_mask = (
-    (timestamps >= TRAIN_END)
-    & (timestamps < VAL_END)
+    (sample_dates >= TRAIN_END)
+    & (sample_dates < VAL_END)
 )
 
-test_mask = timestamps >= VAL_END
+test_mask = sample_dates >= VAL_END
 
 splits = {
     "train": train_mask,
@@ -561,6 +567,7 @@ feature_schema = {
     "solexs_channels": solexs_signals,
     "rolling_windows_minutes": ROLLING_WINDOWS,
     "difference_lags_minutes": DIFF_LAGS,
+    "row_policy": ROW_POLICY,
     "split_boundaries_utc": {
         "train_end": str(TRAIN_END),
         "validation_end": str(VAL_END),

@@ -54,7 +54,11 @@ import argparse
 import gc
 import hashlib
 import json
+<<<<<<< HEAD
 import platform
+=======
+import os
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 import random
 import subprocess
 import sys
@@ -78,8 +82,13 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
 ROOT = Path(__file__).resolve().parents[2]
+<<<<<<< HEAD
 DEFAULT_DATA_DIR = ROOT / "output" / "ml_ready_minute_end_v2"
 DEFAULT_OUTPUT_DIR = ROOT / "output" / "model_results" / "deep_learning"
+=======
+DATA_DIR = Path(os.environ.get("ARUNX_ML_DATA_DIR", str(ROOT / "output" / "ml_ready_minute_end_v2")))
+OUTPUT_DIR = ROOT / "output" / "model_results" / "deep_learning"
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
 HORIZONS = (15, 30, 60)
 EXPECTED_FEATURES = 424
@@ -276,12 +285,19 @@ def load_feature_names(data_dir: Path, expected: int) -> tuple[list[str], str]:
     schema_path = data_dir / "feature_schema.json"
     with schema_path.open("r", encoding="utf-8") as f:
         schema = json.load(f)
+<<<<<<< HEAD
     features = list(schema["features"])
     if len(features) != expected:
         raise ValueError(f"Expected {expected} features in schema, found {len(features)}")
     if len(set(features)) != len(features):
         raise ValueError("Duplicate feature names in feature_schema.json")
     return features, sha256_file(schema_path)
+=======
+    features = schema["features"]
+    if not features:
+        raise ValueError("Feature schema is empty")
+    return features
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
 
 def validate_target(series: pd.Series, name: str, allow_null_drop: bool):
@@ -1103,6 +1119,7 @@ def train_one(args, model_name: str, horizon: int, device: torch.device,
         free_memory(device)
 
 
+<<<<<<< HEAD
 # ============================================================
 # CLI
 # ============================================================
@@ -1160,6 +1177,30 @@ def parse_args(argv=None):
                    help="error (instead of warn) if a split gap is shorter than the forecast horizon")
 
     args = p.parse_args(argv)
+=======
+def main():
+    global EPOCHS, BATCH_SIZE, SEQ_LEN, DATA_DIR
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model",
+        choices=["cnn", "cnn_lstm", "both"],
+        default="cnn_lstm",
+        help="Architecture to train (default: cnn_lstm)",
+    )
+    parser.add_argument("--epochs", type=int, default=EPOCHS)
+    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
+    parser.add_argument("--sequence-length", type=int, default=SEQ_LEN)
+    parser.add_argument("--horizons", type=int, nargs="+", default=list(HORIZONS))
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR,
+                        help="directory containing feature_schema.json and task split Parquet files")
+    args = parser.parse_args()
+
+    DATA_DIR = args.data_dir.resolve()
+
+    EPOCHS = args.epochs
+    BATCH_SIZE = args.batch_size
+    SEQ_LEN = args.sequence_length
+>>>>>>> a3cfcab (Implemented full data preprocessing)
 
     if any(h not in HORIZONS for h in args.horizons):
         p.error(f"--horizons must be chosen from {HORIZONS}")

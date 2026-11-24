@@ -1,0 +1,136 @@
+{
+  "run_id": "preproc_20261124_v1",
+  "created_utc": "2026-11-24T12:49:56.930988+00:00",
+  "config_sha256": "c028f6d0504c79d8ad43ffc5c53a761e5a7dc6b3294be4052e7392f9a615e5ca",
+  "source_goes_sha256": "4bd5e105eb158d64f268ef08977ce784ee6fcd07c217d00ba5dbda731bedce76",
+  "run_directory": "output/preprocessing_runs/preproc_20261124_v1",
+  "stages": [
+    "local archive inventory and ZIP validation",
+    "selective extraction",
+    "GOES parsing",
+    "multi-day UTC merge",
+    "GOES interval labels",
+    "segment-aware forecast targets",
+    "past-only features",
+    "chronological task splits",
+    "output validation"
+  ],
+  "validation_report": "output/preprocessing_runs/preproc_20261124_v1/reports/preprocessing_report.json",
+  "output_files": [
+    {
+      "path": "merged/merged_timeseries_minute_end_v2.parquet",
+      "size_bytes": 17631228,
+      "sha256": "eb3042a311c962a10a1f1a251ec3aa11094f9ec21be96177ddd528262c0f0231"
+    },
+    {
+      "path": "labels/labeled_timeseries_minute_end_v2.parquet",
+      "size_bytes": 17639169,
+      "sha256": "1ebea61e4cc05ebd4cd0959c63dae00234e874e02303dc69b9ebda7187694a72"
+    },
+    {
+      "path": "labels/forecast_labeled_timeseries_minute_end_v2.parquet",
+      "size_bytes": 17647544,
+      "sha256": "43ebad815bcca02d5a6d73c956be604650a936015ee310fc8d3eefc23afa0878"
+    },
+    {
+      "path": "ml_ready/feature_schema.json",
+      "size_bytes": 26495,
+      "sha256": "4876d7c2e6efdabeaea1d4dd15ffdc0326d42bcbc16dc52c9caf323667b0d242"
+    },
+    {
+      "path": "ml_ready/dataset_summary.csv",
+      "size_bytes": 2752,
+      "sha256": "59cb0aeee5816a67f97c3fbc22daea11dcef76bfe29e232386b9539c3c4410a0"
+    },
+    {
+      "path": "ml_ready/classification_test.parquet",
+      "size_bytes": 77136304,
+      "sha256": "0cc7632d7eb119e0ee6339bd95b5a93d3c1b69a48eb6075c836247eda7aa0878"
+    },
+    {
+      "path": "ml_ready/classification_train.parquet",
+      "size_bytes": 316295537,
+      "sha256": "a5825bdda6479fc10d5e44d0aefb1901932c536315fd3bcbe8eb906b5bab594e"
+    },
+    {
+      "path": "ml_ready/classification_validation.parquet",
+      "size_bytes": 67764335,
+      "sha256": "09d5010528ffbf5b30032776ad5607822531702992dbd5627dc041e00f7df69d"
+    },
+    {
+      "path": "ml_ready/forecast_15m_test.parquet",
+      "size_bytes": 73816669,
+      "sha256": "8157de877a56412e7b3e46eadb7702770bc20ee520895f3c416047afbe4885de"
+    },
+    {
+      "path": "ml_ready/forecast_15m_train.parquet",
+      "size_bytes": 311089686,
+      "sha256": "f219143859de45f39210834bb4f0b1932a894519c3eb3c72933272cdf08a6d73"
+    },
+    {
+      "path": "ml_ready/forecast_15m_validation.parquet",
+      "size_bytes": 66535362,
+      "sha256": "7b7e464a5b2d95eed86c82316c8165ba035ccd0e1f8b1fee7c52dbd5fc75b4a9"
+    },
+    {
+      "path": "ml_ready/forecast_30m_test.parquet",
+      "size_bytes": 73695554,
+      "sha256": "578f6a4d9291070529d90c86be0ee4ae3c895ae583b7bd3da8eefca8a16eec9a"
+    },
+    {
+      "path": "ml_ready/forecast_30m_train.parquet",
+      "size_bytes": 310574043,
+      "sha256": "4a6bd95213484bcbf25e2375e31a73d71b454efce06a8d1237154d97074afebc"
+    },
+    {
+      "path": "ml_ready/forecast_30m_validation.parquet",
+      "size_bytes": 66479042,
+      "sha256": "8f9ee1413b5c10bee579a3ab974ce63abb9c363322c5bb98f311aca2d6550b60"
+    },
+    {
+      "path": "ml_ready/forecast_60m_test.parquet",
+      "size_bytes": 73415407,
+      "sha256": "a3681c156f0f8fff4db2fe7a509f2f0953c22b2b50bd2b007f721f24abd071ee"
+    },
+    {
+      "path": "ml_ready/forecast_60m_train.parquet",
+      "size_bytes": 309763511,
+      "sha256": "bb286c245a5a32ddf094b311a81b726d78d9473beac93c07447b648d5c5ce975"
+    },
+    {
+      "path": "ml_ready/forecast_60m_validation.parquet",
+      "size_bytes": 66332303,
+      "sha256": "b6bce1917d90a03c4e6260757881faf51e385369c2085790ace91094bc854eb3"
+    },
+    {
+      "path": "ml_ready/nowcasting_test.parquet",
+      "size_bytes": 77136287,
+      "sha256": "96e44cdc10a4eaeefc605a0a922350219cb4e66eec86bf9529845be2e1b18aea"
+    },
+    {
+      "path": "ml_ready/nowcasting_train.parquet",
+      "size_bytes": 316295521,
+      "sha256": "26e0abbf72b6d0cbdd338965136f95b838c1adf2d2caba1df1be34146b32fe55"
+    },
+    {
+      "path": "ml_ready/nowcasting_validation.parquet",
+      "size_bytes": 67764330,
+      "sha256": "ad23e2977e24f6357b101c9c4b73449f963810669d813ab9c29c0d9872edd798"
+    },
+    {
+      "path": "ml_ready/peak_detection_test.parquet",
+      "size_bytes": 77136263,
+      "sha256": "986c1ad137e00a55fd4119d5c9a56cd080b1d30581b0723b389ec0bf1be4c6b2"
+    },
+    {
+      "path": "ml_ready/peak_detection_train.parquet",
+      "size_bytes": 316295517,
+      "sha256": "b2e2c144dba15258c890aa46df0549854fe0362d881c77415dc365442d0730ac"
+    },
+    {
+      "path": "ml_ready/peak_detection_validation.parquet",
+      "size_bytes": 67764329,
+      "sha256": "7e12a683f0dd5ae908792219bc87f4458fcadee451bd3085ec063b30528d1d85"
+    }
+  ]
+}
